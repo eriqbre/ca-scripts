@@ -18,6 +18,9 @@ module.exports = function (app) {
     // api routes
     require('./routes/toons')(app);
 
+    // request routes
+    require('./requests/login')(app);
+
     // catchall for any unhandled route
     app.get('*', function (request, response) {
         response.sendfile('index.html');

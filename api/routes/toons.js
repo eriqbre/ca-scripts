@@ -12,8 +12,13 @@ module.exports = function (app) {
             next();
         })
         .get(function (request, response) {
-            response.json({
-                message: 'show all toons'
+            Toon.find(function (error, data) {
+                if (error) return response.send({error: error.message});
+
+                response.json({
+                    message: 'show all toons',
+                    data: data
+                });
             });
         });
 
@@ -23,7 +28,7 @@ module.exports = function (app) {
             next();
         })
         .post(function (request, response) {
-            var toon = new Toon(request.body.toon);
+            var toon = new Toon(request.body);
 
             toon.save(function (error, data) {
                 if (error) return response.send({error: error.message});
