@@ -1,0 +1,14 @@
+{
+  "name": "ca-scripts",
+  "description": "automated scripts for ca",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.12.3",
+    "mongoose": "^4.0.1",
+    "request": "^2.55.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eriqbre/ca-scripts.git"
+  }
+}
