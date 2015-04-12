@@ -12,7 +12,8 @@
     "method-override": "^2.3.2",
     "mongoose": "^4.0.1",
     "morgan": "^1.5.2",
-    "request": "^2.55.0"
+    "request": "^2.55.0",
+    "tough-cookie": "^0.12.1"
   },
   "repository": {
     "type": "git",

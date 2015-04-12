@@ -13,14 +13,10 @@ module.exports = function (app) {
         .get(function (request, response) {
             // get the credentials for email requested
             Toon.findOne({email: request.params.email}, function (error, toon) {
-                // log into ca
-                // parse the result
-
-                response.json({
-                    message: 'log in to ca',
-                    data: login(toon)
-                })
+                // trigger login request
+                login(toon, function (data) {
+                    response.json(data)
+                });
             });
-
         });
 };

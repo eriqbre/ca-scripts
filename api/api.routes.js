@@ -16,7 +16,9 @@ module.exports = function (app) {
     });
 
     // api routes
-    require('./routes/toons')(app);
+    require('./models/roles')(app);
+    require('./models/toons')(app);
+    require('./models/users')(app);
 
     // request routes
     require('./requests/login')(app);
