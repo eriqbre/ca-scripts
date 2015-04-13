@@ -1,5 +1,6 @@
 /**
  * Created by ebreland on 4/11/15.
+ * data must contain email, password
  */
 
 var request = require('../requests/base'),
@@ -7,10 +8,10 @@ var request = require('../requests/base'),
     routes = require('../config/routes'),
     cheerio = require('cheerio');
 
-module.exports = function (credentials, callback) {
+module.exports = function (data, callback) {
     var options = {
         url: routes.login,
-        form: form(credentials)
+        form: form(data)
     };
 
     request(options, function (error, response) {

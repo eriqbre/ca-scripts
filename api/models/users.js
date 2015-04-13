@@ -2,7 +2,8 @@
  * Created by ebreland on 4/11/15.
  */
 
-var User = require('../../models/user');
+var User = require('../../models/user'),
+    userService = require('../../services/users');
 
 module.exports = function (app) {
     app.route('/api/users')
@@ -11,13 +12,8 @@ module.exports = function (app) {
             next();
         })
         .get(function (request, response) {
-            User.find(function (error, data) {
-                if (error) return response.send({error: error.message});
-
-                response.json({
-                    message: 'show all users',
-                    data: data
-                });
+            userService.getUsers(function(error, data){
+                response.json(data);
             });
         });
 
@@ -42,11 +38,9 @@ module.exports = function (app) {
             next();
         })
         .get(function (request, response) {
-            User.findOne({id: request.params.id}, function (error, data) {
-                if (error) return response.send({error: error.message});
-
+            userService.getUser(request.params.id, function(error, data){
                 response.json(data);
-            })
+            });
         })
         .delete(function (request, response) {
             User.findOneAndRemove({_id: request.params.id}, function (error, data) {

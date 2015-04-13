@@ -2,7 +2,8 @@
  * Created by ebreland on 4/11/15.
  */
 
-var Toon = require('../../models/toon');
+var Toon = require('../../models/toon'),
+    toonService = require('../../services/toons');
 
 module.exports = function (app) {
     // api/toons
@@ -12,13 +13,8 @@ module.exports = function (app) {
             next();
         })
         .get(function (request, response) {
-            Toon.find(function (error, data) {
-                if (error) return response.send({error: error.message});
-
-                response.json({
-                    message: 'show all toons',
-                    data: data
-                });
+            toonService.getToons(function(error, data){
+                response.json(data);
             });
         });
 
@@ -42,14 +38,10 @@ module.exports = function (app) {
             console.log('single toon interceptor');
             next();
         })
-
-        // get a single toon document
         .get(function (request, response) {
-            Toon.findOne({id: request.params.id}, function (error, toon) {
-                if (error) return response.send({error: error.message});
-
-                response.json(toon);
-            })
+            toonService.getToon({ id: request.params.id }, function(error, data){
+                response.json(data);
+            });
         })
 
         // delete a toon document

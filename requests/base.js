@@ -28,7 +28,7 @@ module.exports = function (options, callback) {
         form = options.form;
     }
 
-    return request({
+    return (options.request || request)({
         formData: form,
         headers: headers,
         url: url
