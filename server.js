@@ -49,6 +49,9 @@ var allowCrossDomain = function (request, response, next) {
 // set up api endpoints
 require('./api/api.routes')(app);
 
+// set up jobs
+require('./jobs/battle-loadouts')(app);
+
 app.listen(port);
 console.log('go get em on port ' + port);
 
