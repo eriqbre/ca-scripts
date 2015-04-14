@@ -17,6 +17,6 @@ module.exports = function (data, callback) {
     request(options, function (error, response) {
         console.log('good response from ' + routes.login);
         console.log('template is ' + response.template);
-        callback(response.data);
+        callback(error, response);
     });
 };

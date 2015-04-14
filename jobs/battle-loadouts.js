@@ -5,7 +5,8 @@
 
 var async = require('async'),
     battles = require('../config/battle-times'),
-    schedule = require('node-schedule'),
+    cron = require('cron').CronJob,
+    login = require('../requests/login'),
     toonService = require('../services/toons'),
     _ = require('underscore');
 
@@ -13,21 +14,31 @@ module.exports = function (app) {
     // grab all the toons that subscribe to battle-loadouts
     toonService.getToons(function(error, toons){
         if (error) return error;
-        var immediate = new Date().addMinute(1);
-        battles.push(immediate);
 
         // for each battle time
         _.each(battles, function(battle){
-            // schedule a job for each battle, to set loadouts for all the toons
-            schedule.scheduleJob(battle.time, function(){
-                // log in each toon that subscribes to battle-loadouts and set their battle loadout
-                async.map(toons, function (battle) {
+            try {
+                // schedule a job for each battle, to set loadouts for all the toons
+                new cron(new Date(), function(){
+                    console.log('executing battle-loadouts job');
+                    // log in each toon that subscribes to battle-loadouts and set their battle loadout
+                    async.map(toons, function (toon, callback) {
+                        console.log('run loadout for toon');
 
-                }, function (error, data) {
-                    var stop = true;
-                });
-            }, true);
+                        login(toon, function(error, response){
+                            callback(error, response.data);
+                        });
 
+                    }, function (error, data) {
+                        console.log('battle-loadout mapping complete');
+                    });
+                }, function(){ // executed when job stops
+                    console.log('battle-loadout job complete');
+                }, true, 'America/New_York');
+            }
+            catch(exception){
+                console.log('invalid cron pattern');
+            }
         });
     });
 };
