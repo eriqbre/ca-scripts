@@ -17,28 +17,43 @@ module.exports = function (app) {
 
         // for each battle time
         _.each(battles, function(battle){
-            try {
-                // schedule a job for each battle, to set loadouts for all the toons
-                new cron(new Date(), function(){
-                    console.log('executing battle-loadouts job');
-                    // log in each toon that subscribes to battle-loadouts and set their battle loadout
-                    async.map(toons, function (toon, callback) {
-                        console.log('run loadout for toon');
+            // schedule a job for each battle, to set loadouts for all the toons
+            new cron(new Date(), function(){
+                console.log('executing battle-loadouts job');
+                // log in each toon that subscribes to battle-loadouts and set their battle loadout
+                async.map(toons, function (toon, callback) {
+                    console.log('run loadout for toon');
 
-                        login(toon, function(error, response){
-                            callback(error, response.data);
-                        });
-
-                    }, function (error, data) {
-                        console.log('battle-loadout mapping complete');
+                    // waterfall through the login process and set loadouts
+                    async.waterfall([
+                        // login
+                        function(callback){
+                            login(toon, function(error, response){
+                                callback(error, response.data);
+                            })
+                        },
+                        // set battle loadouts
+                        function(data, callback){
+                            callback(null, data);
+                        }
+                    ],
+                        // terminates waterfall
+                        function(error, callback){
+                            // callback to end async.map
+                            callback(error, callback);
                     });
-                }, function(){ // executed when job stops
-                    console.log('battle-loadout job complete');
-                }, true, 'America/New_York');
-            }
-            catch(exception){
-                console.log('invalid cron pattern');
-            }
+
+                }, function (error, data) {
+                    // finished with async.map
+                    console.log('battle-loadout mapping complete');
+                    callback(error, data);
+                });
+            }, function(){ // executed when job stops
+                console.log('battle-loadout job complete');
+            }, true, 'America/New_York');
         });
     });
+
+    // nothing to return as this is a scheduled job
+    console.log('battle-loadouts scheduled')
 };
