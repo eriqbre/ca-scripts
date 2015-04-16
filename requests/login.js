@@ -15,8 +15,8 @@ module.exports = function (data, callback) {
     };
 
     request(options, function (error, response) {
-        console.log('good response from ' + routes.login);
-        console.log('template is ' + response.template);
+        var $ = cheerio.load(response.body);
+        var form = $('form').text();
         callback(error, response);
     });
 };

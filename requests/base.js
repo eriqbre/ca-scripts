@@ -4,49 +4,49 @@
  */
 
 var request = require('request'),
-    cookie = require('tough-cookie'),
-    cheerio = require('cheerio');
+    _ = require('lodash');
 
 module.exports = function (options, callback) {
+    require('request-debug')(request);
     var headers = {
-            followAllRedirects: true,
-            followRedirect: true,
-            jar: true,
-            method: 'GET',
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
-            }
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
         },
-        url, form;
+        url, form,
+        jar = request.jar();
 
     if (options.url) {
         url = options.url;
     }
 
     if (options.form) {
-        headers.method = 'POST';
+        options.method = 'POST';
         form = options.form;
+    } else {
+        options.method = 'GET'
     }
 
-    return (options.request || request)({
-        formData: form,
-        headers: headers,
-        url: url
-    }, callback)
-        .on('response', function (response) {
-            response.data = {
-                template: 'home',
-                data: {
-                    name: 'to-do'
-                }
-            }
-        })
+   return request({
+       followAllRedirects: true,
+       followRedirect: true,
+       formData: form,
+       headers: headers,
+       jar: true,
+       method: options.method,
+       url: url
+    }, function(error, response, body){
+
+       callback(error, response);
+   })
+       .on('response', function (response) {
+           _.extend(response, {
+               template: 'home',
+               url: url,
+               data: {
+                   name: 'to-do'
+               }
+           });
+       })
         .on('error', function (error) {
             console.log(error);
-            response.data = {
-                template: 'error',
-                error: error,
-                data: {}
-            }
         });
 };
