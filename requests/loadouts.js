@@ -6,13 +6,14 @@ var request = require('../requests/base'),
     async = require('async'),
     form = require('../config/forms/loadouts'),
     routes = require('../config/routes'),
-    cheerio = require('cheerio');
+    cheerio = require('cheerio'),
+    _ = require('lodash');
 
-module.exports = function (data, callback) {
-    var options = {
+module.exports = function (options, callback) {
+    _.extend(options, {
         url: routes.changeLoadout,
-        form: form(data)
-    };
+        form: form(options)
+    });
 
     request(options, function (error, response) {
         console.log('template is ' + response.template);

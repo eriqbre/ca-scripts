@@ -24,7 +24,6 @@ app.use(bodyParser.json({type: 'application/*json'}));
 app.use(bodyParser.urlencoded({extended: true, type: 'application/x-www-form-urlencoded'}));
 app.use(session({
     secret: 'win-win',
-    key: 'sid',
     resave: false,
     saveUninitialized: true,
     cookie: {secure: false, maxAge: 360 * 5}
@@ -46,11 +45,10 @@ var allowCrossDomain = function (request, response, next) {
     }
 };
 
+var session = require('./services/session')(app);
+
 // set up api endpoints
 require('./api/api.routes')(app);
-
-// set up jobs
-require('./jobs/battle-loadouts')(app);
 
 app.listen(port);
 console.log('go get em on port ' + port);

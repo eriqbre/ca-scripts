@@ -4,15 +4,18 @@
  */
 
 var request = require('request'),
+    routes = require('../config/routes'),
+    tough = require('tough-cookie'),
     _ = require('lodash');
 
 module.exports = function (options, callback) {
-    require('request-debug')(request);
-    var headers = {
+    //require('request-debug')(request);
+    var _this = this,
+        headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
         },
         url, form,
-        jar = request.jar();
+        jar = options.jar || request.jar();
 
     if (options.url) {
         url = options.url;
@@ -30,15 +33,19 @@ module.exports = function (options, callback) {
        followRedirect: true,
        formData: form,
        headers: headers,
-       jar: true,
+       jar: jar,
        method: options.method,
        url: url
     }, function(error, response, body){
+        //request.session.id = jar.getCookies('https://web3.castleagegame.com');
 
        callback(error, response);
    })
        .on('response', function (response) {
+
            _.extend(response, {
+               //cookies: jar.getCookies(routes.domain),
+               jar: jar,
                template: 'home',
                url: url,
                data: {

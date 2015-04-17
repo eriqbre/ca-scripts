@@ -10,6 +10,11 @@ module.exports = function (app) {
     };
 
     // global middleware
+    app.use('/', function (request, response, next) {
+        console.log('global handler');
+        next();
+    });
+
     app.use('/api', function (request, response, next) {
         console.log(request.url);
         next();
@@ -21,6 +26,7 @@ module.exports = function (app) {
     require('./models/users')(app);
 
     // request routes
+    require('./requests/battle-loadouts')(app);
     require('./requests/login')(app);
 
     // catchall for any unhandled route

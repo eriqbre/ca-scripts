@@ -2,9 +2,11 @@
  * Created by ebreland on 4/11/15.
  */
 
-var base = 'https://web3.castleagegame.com/castle_ws/';
+var domain = 'https://web3.castleagegame.com',
+    base = domain + '/castle_ws/';
 
 module.exports = {
+    domain: domain,
     base: base,
     alliance: base + 'general_alliance.php',
     changeLoadout: base + 'hot_swap_ajax_handler.php ',
