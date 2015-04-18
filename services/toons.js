@@ -2,7 +2,8 @@
  * Created by Bridget on 4/13/2015.
  */
 
-var Toon = require('../models/toon');
+var Toon = require('../models/toon'),
+	mongoose = require('mongoose');
 
 module.exports = {
     getToon: function(data, callback){
@@ -12,8 +13,8 @@ module.exports = {
             callback(null, data);
         })
     },
-    getToons: function(callback){
-        Toon.find(function(error, data){
+    getToons: function(options, callback){
+        Toon.find(options, function(error, data){
             if (error) callback(error, null);
 
             callback(null, data);
