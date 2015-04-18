@@ -4,10 +4,8 @@
  */
 
 var request = require('request'),
-    routes = require('../config/routes'),
-    tough = require('tough-cookie'),
     _ = require('lodash'),
-    cheerio = require('cheerio');
+    async = require('async');
 
 module.exports = function (options, callback) {
     //require('request-debug')(request);
@@ -29,32 +27,36 @@ module.exports = function (options, callback) {
         options.method = 'GET'
     }
 
-   return request({
-       followAllRedirects: true,
-       followRedirect: true,
-       formData: form,
-       headers: headers,
-       jar: jar,
-       method: options.method,
-       proxy: 'http://127.0.0.1:8888',
-       strictSSL: false,
-       url: url
-    }, function(error, response, body){
-
-       callback(error, response);
-   })
-       .on('response', function (response) {
-           // add global data to the response
-           _.extend(response, {
-               data: {
-                   jar: jar,
-                   template: 'home',
-                   url: url,
-                   name: 'to-do'
-               }
-           });
-       })
-        .on('error', function (error) {
-            console.log(error);
-        });
+    async.retry(5, function (callback, results) {
+        request({
+            followAllRedirects: true,
+            followRedirect: true,
+            formData: form,
+            headers: headers,
+            jar: jar,
+            method: options.method,
+            proxy: 'http://127.0.0.1:8888',
+            strictSSL: false,
+            timeout: 5000,
+            url: url
+        }, function (error, response, body) {
+            callback(error, response);
+        })
+            .on('response', function (response) {
+                // add global data to the response
+                _.extend(response, {
+                    data: {
+                        jar: jar,
+                        template: 'home',
+                        url: url,
+                        name: 'to-do'
+                    }
+                });
+            })
+            .on('error', function (error) {
+                console.log(error);
+            })
+    }, function (error, response) {
+        callback(error, response);
+    });
 };

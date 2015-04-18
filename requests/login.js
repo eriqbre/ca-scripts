@@ -6,7 +6,9 @@
 var request = require('../requests/base'),
     form = require('../config/forms/login'),
     routes = require('../config/routes'),
-    cheerio = require('cheerio');
+    cheerio = require('cheerio'),
+    parseLoadouts = require('../parsers/loadouts'),
+    _ = require('underscore');
 
 module.exports = function (data, callback) {
     var _this = this,
@@ -16,10 +18,16 @@ module.exports = function (data, callback) {
         };
 
     request(options, function (error, response) {
-        callback(error, _this.parse(response));
+        if (error || !response.body) {
+            callback(error, null);
+        } else {
+            _this.parse(response, function (error, data) {
+                callback(error, data);
+            });
+        }
     });
 
-    parse = function (response) {
+    parse = function (response, callback) {
         var $ = cheerio.load(response.body),
             data = response.data;
 
@@ -27,36 +35,46 @@ module.exports = function (data, callback) {
         data.name = '';
 
         // parse tokens
-        data.tokens = 0;
+        data.tokens = parseInt($('div#persistHomeConquestPlateOpen').text().replace('Tokens:', '').trim());
 
         // parse  loadouts
         data.loadouts = [];
+        _.each($('select[name="choose_loadout"] option'), function (option) {
+            var $option = $(option);
+            data.loadouts.push({
+                name: $option.text(),
+                id: $option.val(),
+                selected: $option.attr('selected') === 'selected'
+            });
+        });
 
         // parse energy
-        data.energy = 0;
+        data.energy = parseInt($('span#energy_current_value').text());
 
         // parse stamina
-        data.stamina = 0;
+        data.stamina = parseInt($('span#stamina_current_value').text());
 
         // parse health
-        data.health = 0;
+        data.health = parseInt($('span#health_current_value').text());
 
         // parse level and xp needed to level
         data.level = 0;
-        data.xpNeeded = $('div#header_player_xp_needed strong').text();
+        data.xpNeeded = parseInt($('div#header_player_xp_needed strong').text());
 
         // parse demi-blessing available
         data.demiBlessingAvailable = $('input[value="tributeHeader"]').length > 0;
 
         // parse item archive active
-        data.itemArchiveActive = $('input[value="enableItemArchiveBonusHeader"]').length > 0;
+        data.itemArchiveActive = $('input[value="enableItemArchiveBonusHeader"]').length === 0;
 
         // parse resources collected
-        data.resourcesCollected = $('input[value="conquestResourceCollectHeader"]').length > 0;
+        data.resourcesCollected = $('input[value="conquestResourceCollectHeader"]').length === 0;
 
         // parse hero crystal collected
-        data.heroCrystalCollected = $('input[value="conquestDemiCollectHeader"]').length > 0;
+        data.heroCrystalCollected = $('input[value="conquestDemiCollectHeader"]').length === 0;
 
-        return data;
+        data.success = data.xpNeeded > 0;
+
+        callback(null, data);
     }
 };

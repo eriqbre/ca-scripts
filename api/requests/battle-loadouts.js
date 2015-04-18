@@ -4,69 +4,87 @@
  */
 
 var async = require('async'),
-    battles = require('../../config/battle-times'),
+    setToon = require('../../config/toon'),
     changeLoadout = require('../../requests/loadouts'),
     login = require('../../requests/login'),
+    configService = require('../../services/configs'),
+    roleService = require('../../services/roles'),
     toonService = require('../../services/toons'),
     _ = require('underscore');
 
 module.exports = function (app) {
+    var _this = this;
+
     app.get('/api/requests/battle-loadouts', function (request, response) {
+        async.waterfall([
+            // get the proper role
+            function (callback) {
+                roleService.getRole({identifier: 'battle-loadouts'}, function (error, data) {
+                    if (error) callback(error, null);
 
-        // grab all the toons that subscribe to battle-loadouts
-        toonService.getToons(function(error, toons){
-            if (error) return error;
-
-            login({ email: 'ebreland@madmobile.com', password: '27cfh3' }, function(error, loginResponse){
-                changeLoadout({ id: 1, jar: loginResponse.jar }, function(error, changeLoadoutResponse){
-                    response.json(changeLoadoutResponse.data);
+                    callback(error, {role: data});
                 });
+            },
+            // get the toons
+            function (options, callback) {
+                toonService.getToons({roles: options.role._id}, function (error, data) {
+                    if (error) callback(error, null);
+
+                    callback(error, {role: options.role, toons: data});
+                });
+            },
+            // get the configs for each toon
+            function (options, callback) {
+                async.map(options.toons, function (toon, callback) {
+                    configService.getConfig({toon: toon._id, role: options.role}, function (error, data) {
+                        if (error) callback(error, null);
+                        if (!data) { // remove any toon that isn't configured for battle loadouts
+                            _.without(options.toons, toon);
+                            callback(error, null);
+                        } else {
+                            toon.config = data.data;
+                            callback(error, toon);
+                        }
+                    });
+                }, function (error, data) {
+                    callback(error, options);
+                });
+            },
+            // login each toon
+            function (options, callback) {
+                async.map(options.toons, function (toon, callback) {
+                    login({email: toon.email, password: toon.password}, function (error, data) {
+                        if (error) callback(error, null);
+
+                        toon.data = data;
+                        callback(null, {toon: toon, jar: data.jar});
+                    });
+                }, function (error, data) {
+                    // all done with each toon
+                    callback(error, options);
+                });
+            },
+            // change loadouts for battle
+            function (options, callback) {
+                async.map(options.toons, function (toon, callback) {
+                    changeLoadout(toon, function (error, data) {
+                        if (error) callback(error, null);
+
+                        callback(null, toon);
+                    });
+                }, function (error, data) {
+                    // all done with each toon
+                    callback(error, options);
+                });
+            }
+        ], function (error, data) {
+            // end here
+            var result = [];
+            _.each(data.toons, function (toon) {
+                result.push(setToon(toon));
             });
 
-            // for each battle time
-            /*
-             _.each(battles, function(battle){
-             // schedule a job for each battle, to set loadouts for all the toons
-             new cron(new Date(),
-             function(){
-             console.log('executing battle-loadouts job');
-             // log in each toon that subscribes to battle-loadouts and set their battle loadout
-             async.map(toons, function (toon, callback) {
-             console.log('run loadout for toon');
-
-             // waterfall through the login process and set loadouts
-             async.waterfall([
-             // login
-             function(callback){
-             login(toon, function(error, response){
-             callback(error, response.data);
-             })
-             },
-             // set battle loadouts
-             function(data, callback){
-             changeLoadout({ id: 1 }, function(error, response){
-             callback(null, data);
-             });
-             }
-             ],
-             // terminates waterfall
-             function(error, data){
-             // callback to end async.map
-             callback(error, data);
-             });
-
-             }, function (error, data) {
-             // finished with async.map
-             console.log('battle-loadout mapping complete. at this point, tasks are scheduled');
-             });
-             },
-             function(){ // executed when job stops
-             console.log('battle-loadout job complete');
-             },
-             true,
-             'America/New_York');
-             });
-             */
+            response.json(result);
         });
     });
 };

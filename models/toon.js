@@ -15,6 +15,11 @@ var mongoose = require('mongoose'),
         roles: [Schema.ObjectId]
     });
 
+ToonSchema.virtual('password.clear')
+	.get(function () {
+		return cipher.decrypt(this.password);
+	});
+
 // helper methods
 ToonSchema.pre('save', function(next) {
 	this.password = cipher.encrypt(this.password);

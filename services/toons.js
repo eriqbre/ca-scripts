@@ -2,8 +2,7 @@
  * Created by Bridget on 4/13/2015.
  */
 
-var Toon = require('../models/toon'),
-	mongoose = require('mongoose');
+var Toon = require('../models/toon');
 
 module.exports = {
     getToon: function(data, callback){
