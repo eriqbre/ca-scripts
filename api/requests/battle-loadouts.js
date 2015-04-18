@@ -11,7 +11,7 @@ var async = require('async'),
     _ = require('underscore');
 
 module.exports = function (app) {
-    app.get('/requests/battle-loadouts', function(request, response){
+    app.get('/api/requests/battle-loadouts', function (request, response) {
 
         // grab all the toons that subscribe to battle-loadouts
         toonService.getToons(function(error, toons){
@@ -21,7 +21,7 @@ module.exports = function (app) {
                 changeLoadout({ id: 1, jar: loginResponse.jar }, function(error, changeLoadoutResponse){
                     response.json(changeLoadoutResponse.data);
                 });
-            })
+            });
 
             // for each battle time
             /*

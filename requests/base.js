@@ -6,7 +6,8 @@
 var request = require('request'),
     routes = require('../config/routes'),
     tough = require('tough-cookie'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    cheerio = require('cheerio');
 
 module.exports = function (options, callback) {
     //require('request-debug')(request);
@@ -35,20 +36,20 @@ module.exports = function (options, callback) {
        headers: headers,
        jar: jar,
        method: options.method,
+       proxy: 'http://127.0.0.1:8888',
+       strictSSL: false,
        url: url
     }, function(error, response, body){
-        //request.session.id = jar.getCookies('https://web3.castleagegame.com');
 
        callback(error, response);
    })
        .on('response', function (response) {
-
+           // add global data to the response
            _.extend(response, {
-               //cookies: jar.getCookies(routes.domain),
-               jar: jar,
-               template: 'home',
-               url: url,
                data: {
+                   jar: jar,
+                   template: 'home',
+                   url: url,
                    name: 'to-do'
                }
            });
