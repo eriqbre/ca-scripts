@@ -23,7 +23,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/*json'}));
 app.use(bodyParser.urlencoded({extended: true, type: 'application/x-www-form-urlencoded'}));
 app.use(session({
-    secret: 'win-win',
+    secret: 'win-win-will-be-a-success',
+    key: 'sid',
     resave: false,
     saveUninitialized: true,
     cookie: {secure: false, maxAge: 360 * 5}
@@ -32,7 +33,7 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(express.static(__dirname + '/public'));
 
 // allow cross domain requests
-var allowCrossDomain = function (request, response, next) {
+app.use(function (request, response, next) {
     response.header('Access-Control-Allow-Origin', '*');
     response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     response.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -43,9 +44,7 @@ var allowCrossDomain = function (request, response, next) {
     } else {
         next();
     }
-};
-
-var session = require('./services/session')(app);
+});
 
 // set up api endpoints
 require('./api/api.routes')(app);

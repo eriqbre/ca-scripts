@@ -4,14 +4,11 @@
  */
 
 var request = require('request'),
-    routes = require('../config/routes'),
-    tough = require('tough-cookie'),
     _ = require('lodash');
 
 module.exports = function (options, callback) {
     //require('request-debug')(request);
-    var _this = this,
-        headers = {
+    var headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
         },
         url, form,
@@ -35,14 +32,14 @@ module.exports = function (options, callback) {
        headers: headers,
        jar: jar,
        method: options.method,
+	   proxy: 'http://127.0.0.1:8888',
+	   strictSSL: false,
        url: url
-    }, function(error, response, body){
-        //request.session.id = jar.getCookies('https://web3.castleagegame.com');
+    }, function(error, response){
 
        callback(error, response);
    })
        .on('response', function (response) {
-
            _.extend(response, {
                //cookies: jar.getCookies(routes.domain),
                jar: jar,

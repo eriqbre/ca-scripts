@@ -43,8 +43,6 @@ module.exports = function (app) {
                 response.json(data);
             });
         })
-
-        // delete a toon document
         .delete(function (request, response) {
             Toon.findOneAndRemove({_id: request.params.id}, function (error, toon) {
                 if (error) return response.send({error: error.message});
@@ -54,5 +52,15 @@ module.exports = function (app) {
                     data: toon
                 })
             });
-        });
+        })
+	    .put(function (request, response) {
+		    Toon.findOneAndUpdate({_id: request.params.id}, request.body, function (error, toon) {
+			    if (error) return response.send({error: error.message});
+
+			    response.json({
+				    message: 'update a toon',
+				    data: toon
+			    })
+		    });
+	    });
 };
