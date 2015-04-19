@@ -31,7 +31,9 @@ module.exports = function (app) {
                 },
                 // attack the tower
                 function (options, callback) {
-
+                    // after every attack, check remaining actions
+                    // once remaining actions hits a predetermined number, break out and end
+                    // always attack the toon with the most health
                 }
             ], function (error, data) {
                 if (error) response.json(error);
