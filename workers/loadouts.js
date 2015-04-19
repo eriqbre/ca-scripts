@@ -2,25 +2,15 @@
  * Created by ebreland on 4/19/15.
  */
 
-var app = require('../app'),
-    async = require('async'),
+var async = require('async'),
     changeLoadout = require('../requests/loadouts'),
     login = require('../requests/sequences/login-sequence'),
-    port = process.env.PORT || 3020,
     setToon = require('../config/toon'),
-    throng = require('throng'),
     Task = require('../models/task'),
     _ = require('underscore');
 
-start = function (id) {
+start = function (id, callback) {
     var _this = this;
-
-    app.listen(port);
-
-    process.on('SIGTERM', function () {
-        console.log('shutting down');
-        process.exit();
-    });
 
     async.waterfall([
         // execute login sequence for battle loadouts
@@ -56,9 +46,7 @@ start = function (id) {
             if (error) console.log(error);
 
             console.log('loadouts task has completed');
-            process.exit();
+            callback();
         });
     });
 };
-
-throng(start('pre-battle'), {workers: 1});
