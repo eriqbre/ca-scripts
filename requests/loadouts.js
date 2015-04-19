@@ -32,15 +32,7 @@ module.exports = function (options, callback) {
             data = response.data;
 
         // parse  loadouts
-        data.loadouts = [];
-        _.each($('select[name="choose_loadout"] option'), function (option) {
-            var $option = $(option);
-            data.loadouts.push({
-                name: $option.text(),
-                id: $option.val(),
-                selected: $option.attr('selected') === 'selected'
-            });
-        });
+        data.loadouts = parseLoadouts($);
 
         callback(null, data);
     };

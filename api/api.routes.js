@@ -27,7 +27,7 @@ module.exports = function (app) {
     require('./models/users')(app);
 
     // request routes
-    require('./requests/battle-loadouts')(app);
+    require('./requests/loadouts')(app);
     require('./requests/login')(app);
 
     // catchall for any unhandled route

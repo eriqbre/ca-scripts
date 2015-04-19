@@ -38,15 +38,7 @@ module.exports = function (data, callback) {
         data.tokens = parseInt($('div#persistHomeConquestPlateOpen').text().replace('Tokens:', '').trim());
 
         // parse  loadouts
-        data.loadouts = [];
-        _.each($('select[name="choose_loadout"] option'), function (option) {
-            var $option = $(option);
-            data.loadouts.push({
-                name: $option.text(),
-                id: $option.val(),
-                selected: $option.attr('selected') === 'selected'
-            });
-        });
+        data.loadouts = parseLoadouts($);
 
         // parse energy
         data.energy = parseInt($('span#energy_current_value').text());

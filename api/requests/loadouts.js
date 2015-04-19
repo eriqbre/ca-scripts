@@ -15,11 +15,11 @@ var async = require('async'),
 module.exports = function (app) {
     var _this = this;
 
-    app.get('/api/requests/battle-loadouts', function (request, response) {
+    app.get('/api/requests/loadouts/:id', function (request, response) {
         async.waterfall([
             // get the proper role
             function (callback) {
-                roleService.getRole({identifier: 'battle-loadouts'}, function (error, data) {
+                roleService.getRole({identifier: request.params.id}, function (error, data) {
                     if (error) callback(error, null);
 
                     callback(error, {role: data});
@@ -69,6 +69,7 @@ module.exports = function (app) {
                 async.map(options.toons, function (toon, callback) {
                     changeLoadout(toon, function (error, data) {
                         if (error) callback(error, null);
+                        toon.data.loadouts = data.loadouts;
 
                         callback(null, toon);
                     });

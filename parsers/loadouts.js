@@ -6,7 +6,7 @@
 var _ = require('underscore'),
     $ = require('cheerio');
 
-module.exports = function ($, callback) {
+module.exports = function ($) {
     var loadouts = [];
 
     try {
@@ -22,5 +22,5 @@ module.exports = function ($, callback) {
         console.log(exception);
     }
 
-    callback(error, loadouts);
+    return loadouts;
 };
