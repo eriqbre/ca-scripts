@@ -1,2 +1,3 @@
 web: node server.js
-worker: node workers/loadouts.js
+pre-battle-loadouts: node workers/pre-battle-loadouts.js
+battle-defense-loadouts: node workers/battle-defense-loadouts.js

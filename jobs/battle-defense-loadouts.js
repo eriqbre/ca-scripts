@@ -3,17 +3,33 @@
  */
 
 var app = require('../app'),
+    times = require('../config/pre-battle-times'),
+    cronJob = require('cron').CronJob,
     loadouts = require('../workers/loadouts'),
-    port = process.env.PORT || 3021,
-    throng = require('throng');
+    port = process.env.PORT || 3020,
+    throng = require('throng'),
+    job = {
+        name: 'battle-defense loadouts',
+        onTick: throng(start('battle-defense', function () {
+            process.exit();
+        }), {workers: 1}),
+        start: true,
+        timeZone: 'America/New_York'
+    }, jobs = {};
 
-app.listen(port);
+exports.schedule = function () {
+    app.listen(port);
 
-process.on('SIGTERM', function () {
-    console.log('shutting down');
-    process.exit();
-});
+    process.on('SIGTERM', function () {
+        console.log('shutting down');
+        process.exit();
+    });
 
-throng(start('battle-defense', function () {
-    process.exit();
-}), {workers: 1});
+    times.map(function (time) {
+        job.cronTime = time.time;
+        job.id = time.type;
+        jobs[job.id] = new cronJob(job);
+        console.log(common.util.format('%s cronjob scheduled at %s on timezone %s', job.name, job.cronTime, job.timeZone));
+    });
+};
+
