@@ -10,7 +10,7 @@ var request = require('../requests/base'),
 module.exports = function (data, callback) {
     var _this = this,
         options = {
-            url: routes.landOfMist
+            url: routes.landOfMistTower(data.id)
         };
 
     request(options, function (error, response) {

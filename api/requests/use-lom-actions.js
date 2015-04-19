@@ -2,47 +2,41 @@
  * Created by ebreland on 4/11/15.
  * handle using up LoM actions
  *
- * grab all the bots from the database
- * log into the bots, determine how many tokens each has available and store the cookie jars
- * find the lands in defense
- * prioritize the lands by time, actions, health
- * determine how many actions remain in each land under defense
+ * determine how many actions remain
  * while actions > 200, attack targets
  */
 
-var login = require('../../requests/login'),
-    Toon = require('../../models/toon');
+var async = require('async'),
+    login = require('../../requests/sequences/login-sequence'),
+    landOfMistTower = require('../../requests/landOfMistTower');
 
 module.exports = function (app) {
+    var _this = this,
+        actionsRemaining;
 
-    // log into ca
-    app.route('/api/requests/use-lom-actions')
+    app.route('/api/requests/use-lom-actions/:id')
         .get(function (request, response) {
+            async.waterfall([
+                // execute login sequence for lom actions
+                function (callback) {
+                    login({id: 'lom-actions'}, function (error, data) {
+                        callback(null, data);
+                    });
+                },
+                // grab one of the toons and enter the tower
+                function (options, callback) {
+                    landOfMistTower({id: request.params.id}, function (error, data) {
+                        options.tower = data;
+                    });
+                },
+                // attack the tower
+                function (options, callback) {
 
+                }
+            ], function (error, data) {
+                if (error) response.json(error);
+
+                response.json(data);
+            });
         });
-
-    function getBots(callback) {
-        var data, error;
-        callback(error, data);
-    }
-
-    function loginBots(options, callback) {
-        var data, error;
-        callback(error, data);
-    }
-
-    function getLandsInDefense(options, callback) {
-        var data, error;
-        callback(error, data);
-    }
-
-    function prioritizeLandsInDefense(options, callback) {
-        var data, error;
-        callback(error, data);
-    }
-
-    function attack(options, callback) {
-        var data, error;
-        callback(error, data);
-    }
 };
