@@ -8,7 +8,8 @@ var async = require('async'),
     configService = require('../../services/configs'),
     roleService = require('../../services/roles'),
     toonService = require('../../services/toons'),
-    login = require('../../requests/login');
+    login = require('../../requests/login'),
+    _ = require('underscore');
 
 module.exports = function (options, callback) {
     async.waterfall([

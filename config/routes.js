@@ -1,5 +1,5 @@
 /**
- * Created by ebreland on 4/11/15.
+ * Created by ebreland on 4/11/15.400000008563610_1422875732
  */
 
 var domain = 'https://web3.castleagegame.com',
@@ -13,7 +13,7 @@ module.exports = {
     keep: base + 'keep.php',
     landOfMist: base + 'guildv2_conquest_command.php',
     landOfMistTower: function (tower) {
-        return base + 'guildv2_conquest_expansion_fort.php?guild_id=400000008563610_1422875732&slot=' + tower;
+        return base + 'guildv2_conquest_expansion.php?guild_id=400000007931960_1332286643&slot=' + tower;
     },
     login: base + 'connect_login.php'
 };

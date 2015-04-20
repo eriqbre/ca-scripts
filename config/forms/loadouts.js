@@ -5,7 +5,7 @@
 module.exports = function (data) {
     var result = {
         ajax_action: 'change_loadout',
-        target_loadout: data.config.id,
+        target_loadout: data.config.loadout.id,
         ajax: 1
     };
 
