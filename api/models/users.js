@@ -2,7 +2,7 @@
  * Created by ebreland on 4/11/15.
  */
 
-var User = require('../../models/user'),
+var User = require('../../models/user')
     userService = require('../../services/users');
 
 module.exports = function (app) {
