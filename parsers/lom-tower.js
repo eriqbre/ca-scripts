@@ -18,6 +18,11 @@ module.exports = function (response, callback) {
 
     data.toons = [];
 
+	// parse the id of the attacker
+
+	// parse the remaining tokens of the attacker
+	data.tokens = parseInt($('div#persistHomeConquestPlateOpen').text().replace('Tokens:', '').trim());
+
     // parse classes
     _.each(classContainers, function (container) {
         classes.push($(container).attr('title').toLowerCase());

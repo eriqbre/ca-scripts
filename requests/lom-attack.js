@@ -6,7 +6,7 @@
 var request = require('../requests/base'),
     routes = require('../config/routes'),
     form = require('../config/forms/lom-attack'),
-    parser = require('../parsers/parser');
+    parser = require('../parsers/lom-tower');
 
 module.exports = function (options, callback) {
     options.url = routes.landOfMistTower(options.id);
@@ -14,6 +14,7 @@ module.exports = function (options, callback) {
 
     request(options, function (error, response) {
         parser(response, function (error, data) {
+	        data.attacker = options.attacker;
             callback(null, data);
         });
     });

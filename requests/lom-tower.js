@@ -5,7 +5,7 @@
 
 var request = require('../requests/base'),
     routes = require('../config/routes'),
-    parser = require('../parsers/parser');
+    parser = require('../parsers/lom-tower');
 
 module.exports = function (options, callback) {
     options.url = routes.landOfMistTower(options.id);

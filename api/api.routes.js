@@ -26,6 +26,9 @@ module.exports = function (app) {
     require('./models/toons')(app);
     require('./models/users')(app);
 
+	// process routes
+	require('./processes/create-bot')(app);
+
     // request routes
     require('./requests/loadouts')(app);
     require('./requests/login')(app);
