@@ -7,9 +7,9 @@ var Toon = require('../../models/toon'),
 	Config = require('../../models/configs');
 
 module.exports = function(app){
-	app.post('/process/create-bot', function(request, response){
+	app.post('/process/create-bot/:role', function(request, response){
 		// grab the role._id
-		Role.findOne({ identifier: 'lom-actions' }, function(error, role){
+		Role.findOne({ identifier: request.params.role }, function(error, role){
 			if (error) response.send(error);
 
 			// create the toon
