@@ -4,6 +4,7 @@
  */
 
 var async = require('async'),
+	changeLoadout = require('../../requests/loadouts'),
     login = require('../../requests/sequences/login-sequence'),
     landOfMistTower = require('../../requests/lom-tower'),
     lomAttack = require('../../requests/lom-attack'),
@@ -118,6 +119,23 @@ module.exports = function (app) {
                     callback(null, data);
                 });
             },
+	        // change loadouts for any toons that have configs specified
+	        function(options, callback){
+		        // filter list for only toons that have a loadout config
+		        async.map(_.filter(options.toons, function(toon){
+			        return (toon.config && toon.config.loadout) ? 1 : 0;
+		        }), function (toon, callback) {
+			        changeLoadout(toon, function (error, data) {
+				        if (error) callback(error, null);
+				        toon.data.loadouts = data.loadouts;
+
+				        callback(null, toon);
+			        });
+		        }, function (error, data) {
+			        // all done with each toon
+			        callback(error, options);
+		        });
+	        },
             // grab one of the toons and enter the tower
             function (options, callback) {
                 landOfMistTower({id: request.params.id, jar: options.toons[0].jar}, function (error, data) {
