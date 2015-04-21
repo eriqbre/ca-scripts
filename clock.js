@@ -18,7 +18,7 @@ var app = require('./app'),
 
 			process.exit();
 		}),
-		start: true,
+		start: false,
 		timeZone: 'America/New_York'
 	}, preBattleJobs = {},
 	battleDefenseTimes = require('./config/battle-defense-times'),
@@ -32,7 +32,7 @@ var app = require('./app'),
 
 			process.exit();
 		}),
-		start: true,
+		start: false,
 		timeZone: 'America/New_York'
 	}, battleDefenseJobs = {};
 

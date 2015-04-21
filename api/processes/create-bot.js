@@ -10,34 +10,42 @@ module.exports = function(app){
 	app.post('/process/create-bot/:role', function(request, response){
 		// grab the role._id
 		Role.findOne({ identifier: request.params.role }, function(error, role){
-			if (error) response.send(error);
 
-			// create the toon
-			var newToon = new Toon(request.body);
-			newToon.roles.push(role.id);
+			Toon.findOne({ email: request.body.email}, function(error, toon){
 
-			newToon.save(function(error, toon){
-				if (error) response.send(error);
+				if (!toon){
+					// create the toon
+					var toon = new Toon(request.body);
+					toon.roles.push(role.id);
+				}
+				toon.save(function(error, data){
 
-				// if present, create a config
-				if (request.body.config){
-					var newConfig = new Config({ toon: toon.id, role: role.id, data: request.body.config });
+					// if present, create a config
+					if (request.body.config){
 
-					newConfig.save(function(error, config){
-						if (error) response.send(error);
+						Config.findOne({ toon: toon.id, role: role.id }, function(error, configs){
 
+							if (!configs){
+								var configs = new Config({ toon: toon.id, role: role.id, data: request.body.config });
+
+								configs.save(function(error, data){
+									if (error) response.send(error);
+
+									response.json({
+										role: role,
+										toon: toon,
+										config: configs
+									});
+								});
+							}
+						});
+					} else {
 						response.json({
 							role: role,
-							toon: newToon,
-							config: newConfig
+							toon: toon
 						});
-					});
-				} else {
-					response.json({
-						role: role,
-						toon: newToon
-					});
-				}
+					}
+				});
 			});
 		});
 	});
