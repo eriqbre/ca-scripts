@@ -6,7 +6,7 @@ var Toon = require('../models/toon');
 
 module.exports = {
     getToon: function(data, callback){
-        Toon.findOne({id: request.params.id}, function (error, data) {
+        Toon.findOne({_id: data.id}, function (error, data) {
             if (error) callback(error, null);
 
             callback(null, data);

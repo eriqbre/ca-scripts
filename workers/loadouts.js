@@ -2,14 +2,16 @@
  * Created by ebreland on 4/19/15.
  */
 
-var async = require('async'),
+var app = require('../app'),
+    async = require('async'),
     changeLoadout = require('../requests/loadouts'),
     login = require('../requests/sequences/login-sequence'),
     setToon = require('../config/toon'),
     Task = require('../models/task'),
     _ = require('underscore');
 
-module.exports = function (id, callback) {
+module.exports = function (id, port) {
+    app.listen(port);
     var _this = this;
 
     async.waterfall([
@@ -44,12 +46,10 @@ module.exports = function (id, callback) {
             result.push(setToon(toon));
         });
 
+        console.log(id + ' loadouts task has completed');
         task = new Task({name: 'loadouts', type: id, data: result});
         task.save(function (error, response) {
             if (error) console.log(error);
-
-            console.log('loadouts task has completed');
-            callback();
         });
     });
 };

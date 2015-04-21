@@ -4,6 +4,7 @@
 
 var Toon = require('../../models/toon'),
 	Role = require('../../models/role'),
+    cipher = require('../../config/cipher'),
     toonService = require('../../services/toons');
 
 module.exports = function (app) {
@@ -55,13 +56,28 @@ module.exports = function (app) {
             });
         })
 	    .put(function (request, response) {
-		    Toon.findOneAndUpdate({_id: request.params.id}, request.body, function (error, toon) {
-			    if (error) return response.send({error: error.message});
+            Toon.findOne({_id: request.params.id}, function (error, toon) {
 
-			    response.json({
-				    message: 'update a toon',
-				    data: toon
-			    })
+                if (request.body.email) {
+                    toon.email = request.body.email;
+                }
+
+                if (request.body.password) {
+                    toon.password = request.body.password;
+                }
+
+                if (request.body.caId) {
+                    toon.caId = request.body.caId;
+                }
+
+                if (request.body.name) {
+                    toon.name = request.body.name;
+                }
+
+                toon.save(function (error) {
+                    response.json(toon);
+                });
+
 		    });
 	    });
 

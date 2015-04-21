@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 	cipher = require('../config/cipher'),
     ToonSchema = new mongoose.Schema({
         name: String,
-        email: String,
+		email: {type: String, index: {unique: true, dropDups: true}},
         password: String,
         caId: String,
         roles: [Schema.ObjectId]
@@ -36,7 +36,7 @@ ToonSchema.path('email').validate(function (email) {
 ToonSchema.path('email').validate(function(value, callback) {
 	mongoose.models["Toon"].findOne({email: value}, function(err, user) {
 		if(err) throw err;
-		if(user) return callback(false);
+		//if(user) return callback(false);
 		callback(true);
 	});
 }, 'The specified email address is already in use.');
