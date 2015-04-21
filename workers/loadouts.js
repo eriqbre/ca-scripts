@@ -24,7 +24,10 @@ module.exports = function (id, callback) {
             async.map(options.toons, function (toon, callback) {
                 changeLoadout(toon, function (error, data) {
                     if (error || !data) callback(error, null);
-                    toon.data.loadouts = data.loadouts;
+
+	                if (data){
+		                toon.data.loadouts = data.loadouts;
+	                }
 
                     callback(null, toon);
                 });
