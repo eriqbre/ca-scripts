@@ -35,11 +35,11 @@ module.exports = function (options, callback) {
             headers: headers,
             jar: jar,
             method: options.method,
-            //proxy: 'http://127.0.0.1:8888',
+            proxy: 'http://127.0.0.1:8888',
             strictSSL: false,
             timeout: 5000,
             url: url
-        }, function (error, response, body) {
+        }, function (error, response) {
             callback(error, response);
         })
             .on('response', function (response) {

@@ -11,28 +11,34 @@ var app = require('./app'),
 	preBattleTimes = require('./config/pre-battle-times'),
 	preBattleJob = {
 		name: 'pre-battle loadouts',
-		onTick: throng(start('pre-battle', function () {
+		onTick: throng(loadouts('pre-battle', function () {
+			process.on('SIGTERM', function () {
+				console.log('shutting down');
+				process.exit();
+			});
+
 			process.exit();
-		}), {workers: 1}),
+		}), { workers: 1 }),
 		start: true,
 		timeZone: 'America/New_York'
 	}, preBattleJobs = {},
 	battleDefenseTimes = require('./config/battle-defense-times'),
 	battleDefenseJob = {
 		name: 'battle-defense loadouts',
-		onTick: throng(start('battle-defense', function () {
+		onTick: throng(loadouts('battle-defense', function () {
+			process.on('SIGTERM', function () {
+				console.log('shutting down');
+				process.exit();
+			});
+
 			process.exit();
-		}), {workers: 1}),
+		}), { workers: 1 }),
 		start: true,
 		timeZone: 'America/New_York'
 	}, battleDefenseJobs = {};
 
-	app.listen(port);
+app.listen(port);
 
-process.on('SIGTERM', function () {
-	console.log('shutting down');
-	process.exit();
-});
 
 preBattleTimes.map(function (time) {
 	preBattleJob.cronTime = time.time;

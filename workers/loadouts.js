@@ -9,7 +9,7 @@ var async = require('async'),
     Task = require('../models/task'),
     _ = require('underscore');
 
-start = function (id, callback) {
+module.exports = function (id, callback) {
     var _this = this;
 
     async.waterfall([
@@ -23,7 +23,7 @@ start = function (id, callback) {
         function (options, callback) {
             async.map(options.toons, function (toon, callback) {
                 changeLoadout(toon, function (error, data) {
-                    if (error) callback(error, null);
+                    if (error || !data) callback(error, null);
                     toon.data.loadouts = data.loadouts;
 
                     callback(null, toon);
