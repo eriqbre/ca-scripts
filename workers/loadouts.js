@@ -29,6 +29,7 @@ module.exports = function (id, port) {
 
 	                if (data){
 		                toon.data.loadouts = data.loadouts;
+                        console.log(id + 'loadout changed for ' + toon.name);
 	                }
 
                     callback(null, toon);
