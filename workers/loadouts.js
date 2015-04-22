@@ -11,46 +11,47 @@ var app = require('../app'),
     _ = require('underscore');
 
 module.exports = function (id, port) {
-    app.listen(port);
     var _this = this;
 
-    async.waterfall([
-        // execute login sequence for battle loadouts
-        function (callback) {
-            login({id: id}, function (error, data) {
-                callback(null, data);
-            });
-        },
-        // change loadouts for battle
-        function (options, callback) {
-            async.map(options.toons, function (toon, callback) {
-                changeLoadout(toon, function (error, data) {
-                    if (error || !data) callback(error, null);
-
-	                if (data){
-		                toon.data.loadouts = data.loadouts;
-                        console.log(id + 'loadout changed for ' + toon.name);
-	                }
-
-                    callback(null, toon);
+    app.listen(port, function () {
+        async.waterfall([
+            // execute login sequence for battle loadouts
+            function (callback) {
+                login({id: id}, function (error, data) {
+                    callback(null, data);
                 });
-            }, function (error, data) {
-                // all done with each toon
-                callback(error, options);
-            });
-        }
-    ], function (error, data) {
-        // end here
-        var result = [],
-            task;
-        _.each(data.toons, function (toon) {
-            result.push(setToon(toon));
-        });
+            },
+            // change loadouts for battle
+            function (options, callback) {
+                async.map(options.toons, function (toon, callback) {
+                    changeLoadout(toon, function (error, data) {
+                        if (error || !data) callback(error, null);
 
-        console.log(id + ' loadouts task has completed');
-        task = new Task({name: 'loadouts', type: id, data: result});
-        task.save(function (error, response) {
-            if (error) console.log(error);
+                        if (data) {
+                            toon.data.loadouts = data.loadouts;
+                            console.log(id + 'loadout changed for ' + toon.name);
+                        }
+
+                        callback(null, toon);
+                    });
+                }, function (error, data) {
+                    // all done with each toon
+                    callback(error, options);
+                });
+            }
+        ], function (error, data) {
+            // end here
+            var result = [],
+                task;
+            _.each(data.toons, function (toon) {
+                result.push(setToon(toon));
+            });
+
+            console.log(id + ' loadouts task has completed');
+            task = new Task({name: 'loadouts', type: id, data: result});
+            task.save(function (error, response) {
+                if (error) console.log(error);
+            });
         });
     });
 };
