@@ -13,6 +13,8 @@ var app = require('../app'),
 	setToon = require('../config/toon');
 
 app.listen(3023, function () {
+    console.log('running');
+
 	cronfigs.map(function (cronfig) {
 		new cronJob({
 			cronTime: cronfig.time,
@@ -30,7 +32,7 @@ app.listen(3023, function () {
 					// change loadouts for battle
 					function (options, callback) {
 						async.map(options.toons, function (toon, callback) {
-							changeLoadout(toon, function (error, data) {
+                            changeLoadout(toon, id, function (error, data) {
 								if (data) {
 									toon.data.loadouts = data.loadouts;
 									console.log(id + ' loadout changed for ' + toon.name);

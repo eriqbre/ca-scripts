@@ -11,7 +11,7 @@ var app = require('./app'),
 	changeLoadout = require('./requests/loadouts'),
 	login = require('./requests/sequences/login-sequence'),
 	setToon = require('./config/toon');
-
+/*
 // todo: move this to workers/loadouts and update procfile
 app.listen(3023, function () {
 	cronfigs.map(function (cronfig) {
@@ -65,7 +65,6 @@ app.listen(3023, function () {
 	});
 
 	// heartbeat for the dynos, let's try it without first :)
-	/*
 	["40 * * * *", "10 * * * *"].map(function (keepAlive) {
 		new cronJob({
 			cronTime: keepAlive,
@@ -75,6 +74,6 @@ app.listen(3023, function () {
 			start: true,
 			timeZone: 'America/New_York'
 		});
-	});*/
+ });
 });
-
+ */
