@@ -1,2 +1,2 @@
-web: node server.js
-worker: node workers/loadouts.js
+web: node --debug server.js
+worker: node --debug workers/loadouts.js
