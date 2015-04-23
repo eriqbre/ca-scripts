@@ -25,7 +25,7 @@ var test = new cronJob({
 	onTick: function () {
 		console.log('testing');
 	},
-	cronTime: '8 * * * *',
+	cronTime: '15 * * * *',
 	id: 'test',
 	start: true,
 	timeZone: 'America/New_York'

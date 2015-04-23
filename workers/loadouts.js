@@ -25,8 +25,6 @@ module.exports = function (id, port) {
             function (options, callback) {
                 async.map(options.toons, function (toon, callback) {
                     changeLoadout(toon, function (error, data) {
-                        if (error || !data) callback(error, null);
-
                         if (data) {
                             toon.data.loadouts = data.loadouts;
                             console.log(id + 'loadout changed for ' + toon.name);
