@@ -12,7 +12,8 @@ var mongoose = require('mongoose'),
 		email: {type: String, index: {unique: true, dropDups: true}},
         password: String,
         caId: String,
-        roles: [Schema.ObjectId]
+	    configs: Schema.Types.Mixed,
+        roles: [String]
     });
 
 ToonSchema.virtual('password.clear')

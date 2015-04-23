@@ -13,37 +13,12 @@ var async = require('async'),
 
 module.exports = function (options, callback) {
     async.waterfall([
-        // get the proper role
-        function (callback) {
-            roleService.getRole({identifier: options.id}, function (error, data) {
-                if (error) callback(error, null);
-
-                callback(error, {role: data});
-            });
-        },
         // get the toons
-        function (options, callback) {
-            toonService.getToons({roles: options.role._id}, function (error, data) {
+        function (callback) {
+            toonService.getToons({roles: options.id}, function (error, data) {
                 if (error) callback(error, null);
 
                 callback(error, {role: options.role, toons: data});
-            });
-        },
-        // get the configs for each toon
-        function (options, callback) {
-            async.map(options.toons, function (toon, callback) {
-                configService.getConfig({toon: toon._id, role: options.role}, function (error, data) {
-                    if (error) callback(error, null);
-                    if (!data) { // remove any toon that isn't configured
-                        _.without(options.toons, toon);
-                        callback(error, null);
-                    } else {
-                        toon.config = data.data;
-                        callback(error, toon);
-                    }
-                });
-            }, function (error, data) {
-                callback(error, options);
             });
         },
         // login each toon

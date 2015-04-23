@@ -9,12 +9,12 @@ var request = require('../requests/base'),
     cheerio = require('cheerio'),
     _ = require('underscore');
 
-module.exports = function (options, callback) {
+module.exports = function (options, role, callback) {
     var _this = this;
 
     _.extend(options, {
         url: routes.changeLoadout,
-        form: form(options)
+        form: form(options,role)
     });
 
     request(options, function (error, response) {

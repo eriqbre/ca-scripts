@@ -13,6 +13,7 @@ var async = require('async'),
 module.exports = function (app) {
     var _this = this,
         actionsRemaining = 1000,
+	    role = 'lom-actions',
 	    attack = function(options, callback){
 		    lomAttack(formAttack(options), function(error, data){
 			    var remainingTokens = 0;
@@ -31,7 +32,7 @@ module.exports = function (app) {
 			    // update remaining tokens for the current attacker
 			    if (updatedToons.length === 1){
 				    updatedToons[0].data.tokens = data.tokens;
-			    };
+			    }
 
 			    // update remaining tokens
 			    _.each(options.toons, function(toon){
@@ -76,7 +77,7 @@ module.exports = function (app) {
 				    case 'rogue':
 					    a.sort = 4;
 					    break;
-			    };
+			    }
 			    switch (b.class){
 				    case 'cleric':
 					    b.sort = 1;
@@ -90,7 +91,7 @@ module.exports = function (app) {
 				    case 'rogue':
 					    b.sort = 4;
 					    break;
-			    };
+			    }
 
 			    return 2 * (a.sort > b.sort ? 1 : a.sort < b.sort ? -1 : 0) + 1 * (a.level < b.level ? 1 : a.level > b.level ? -1 : 0);
 		    });
@@ -115,7 +116,7 @@ module.exports = function (app) {
         async.waterfall([
             // execute login sequence for lom actions
             function (callback) {
-                login({id: 'lom-actions'}, function (error, data) {
+                login({id: role}, function (error, data) {
                     callback(null, data);
                 });
             },
@@ -123,9 +124,9 @@ module.exports = function (app) {
 	        function(options, callback){
 		        // filter list for only toons that have a loadout config
 		        async.map(_.filter(options.toons, function(toon){
-			        return (toon.config && toon.config.loadout) ? 1 : 0;
+			        return (toon.configs && toon.configs[role] && toon.configs[role]['loadout']) ? 1 : 0;
 		        }), function (toon, callback) {
-			        changeLoadout(toon, function (error, data) {
+			        changeLoadout(toon, role, function (error, data) {
 				        if (error) callback(error, null);
 				        toon.data.loadouts = data.loadouts;
 
