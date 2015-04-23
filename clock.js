@@ -20,7 +20,6 @@ var util = require('util'),
 		timeZone: 'America/New_York'
 	}, battleDefenseJobs = {};
 
-
 preBattleTimes.map(function (time) {
 	preBattleJob.cronTime = time.time;
 	preBattleJob.id = time.type;
@@ -34,10 +33,6 @@ preBattleTimes.map(function (time) {
 battleDefenseTimes.map(function (time) {
 	battleDefenseJob.cronTime = time.time;
 	battleDefenseJob.id = time.type;
-	battleDefenseJobs[battleDefenseJob.id] = new cronJob(battleDefenseJob);
-	console.log(util.format('%s cronjob scheduled at %s on timezone %s',
-		battleDefenseJob.name,
-		battleDefenseJob.cronTime,
-		battleDefenseJob.timeZone));
+	//battleDefenseJobs[battleDefenseJob.id] = new cronJob(battleDefenseJob);
+	console.log(util.format('%s cronjob scheduled at %s on timezone %s', battleDefenseJob.name, battleDefenseJob.cronTime, battleDefenseJob.timeZone));
 });
-
