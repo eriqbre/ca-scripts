@@ -83,12 +83,8 @@ module.exports = function (app) {
 
 	app.route('/api/bots/:role')
 		.get(function(request, response){
-			Role.findOne({ identifier: request.params.role }, function(error, role){
-				if (error) response.send(error);
-
-				Toon.find({ roles: role._id }, function(error, toons){
-					response.json(toons);
-				})
+			Toon.find({ roles: request.params.role }, function(error, toons){
+				response.json(toons);
 			});
 		});
 };
