@@ -12,6 +12,7 @@ module.exports = {
     base: base,
     alliance: base + 'general_alliance.php',
     changeLoadout: base + 'hot_swap_ajax_handler.php ',
+    index: base + 'index.php',
     keep: base + 'keep.php',
     landOfMist: base + 'guildv2_conquest_command.php',
     landOfMistTower: function (tower) {
