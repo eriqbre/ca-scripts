@@ -1,3 +1,2 @@
 web: node server.js
-worker: node workers/loadouts.js
-clock: node clock.js
+worker: node --debug clock.js
