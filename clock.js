@@ -12,6 +12,7 @@ var app = require('./app'),
 	login = require('./requests/sequences/login-sequence'),
 	setToon = require('./config/toon');
 
+// todo: move this to workers/loadouts and update procfile
 app.listen(3023, function () {
 	cronfigs.map(function (cronfig) {
 		new cronJob({
