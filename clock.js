@@ -20,6 +20,17 @@ var util = require('util'),
 		timeZone: 'America/New_York'
 	}, battleDefenseJobs = {};
 
+var test = new cronJob({
+	name: 'testing',
+	onTick: function () {
+		console.log('testing');
+	},
+	cronTime: '8 * * * *',
+	id: 'test',
+	start: true,
+	timeZone: 'America/New_York'
+});
+
 preBattleTimes.map(function (time) {
 	preBattleJob.cronTime = time.time;
 	preBattleJob.id = time.type;
