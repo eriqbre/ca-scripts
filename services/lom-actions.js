@@ -5,11 +5,13 @@
 var async = require('async'),
     login = require('../requests/sequences/login-sequence'),
     changeLoadout = require('../requests/loadouts'),
+	lomConfigs = require('../config/lom-actions'),
     lomAttack = require('../requests/lom-attack'),
     landOfMistTower = require('../requests/lom-tower'),
+	lomTowerSort = require('./sort-lom-defense-towers'),
     _ = require('underscore');
 
-module.exports = function (tower, app, callback) {
+module.exports = function (options, callback) {
     var _this = this,
         actionsRemaining = 1000,
         role = 'lom-actions',
@@ -42,7 +44,7 @@ module.exports = function (tower, app, callback) {
                 console.log('actions remaining: ' + actionsRemaining + '/ tokens remaining: ' + remainingTokens);
 
                 // don't use all actions!
-                if (actionsRemaining > 200 && remainingTokens > 0) {
+                if (actionsRemaining > lomConfigs.floor && remainingTokens > 0) {
                     --actionsRemaining;
                     attack(options, callback);
                 }
@@ -139,8 +141,11 @@ module.exports = function (tower, app, callback) {
                 callback(error, options);
             });
         },
-        // grab one of the toons and enter the tower
+        // grab one of the toons and enter the tower to get data about the tower
         function (options, callback) {
+	        // allow for multiple towers in defense at the same time
+
+			console.log('entering tower ' + tower);
             landOfMistTower({id: tower, jar: options.toons[0].jar}, function (error, data) {
                 if (error) callback(error, null);
 
@@ -157,13 +162,16 @@ module.exports = function (tower, app, callback) {
         function (options, callback) {
             actionsRemaining = options.tower.actionsRemaining;
             options.id = tower;
-            // always attack the toon with the most health
-            if (actionsRemaining > 200) {
+
+            if (actionsRemaining > lomConfigs.floor) {
+	            console.log('triggering attack on tower ' + tower + ' with ' + actionsRemaining + ' actions remaining');
                 attack(options, function (error, data) {
                     callback(null, options);
                 });
+            } else {
+	            console.log('not enough actions remaining, exiting land');
+	            callback(null, options);
             }
-
         }
     ], function (error, data) {
         if (callback) {

@@ -6,11 +6,13 @@ var _ = require('underscore');
 
 module.exports = function (data) {
     var result = {
+		    'attack_type': 'normal',
             'is_attacker': '1'
         },
         ignore = [
             'attacking_position',
-            'is_attacker'
+            'is_attacker',
+	        'attack_type'
         ];
 
     _.each(data.inputs, function (input) {

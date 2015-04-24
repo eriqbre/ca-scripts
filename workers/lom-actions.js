@@ -5,9 +5,10 @@
 var app = require('../app'),
 	async = require('async'),
 	attack = require('../services/lom-actions');
-cronfigs = require('../config/cron'),
+	cronfigs = require('../config/cron'),
 	cronJob = require('cron').CronJob,
-	lom = require('../services/lom-check');
+	lom = require('../services/lom-check'),
+	lomTower = require('../requests/lom-tower');
 
 app.listen(3024, function () {
 	console.log('running lom-action check');
@@ -19,16 +20,13 @@ app.listen(3024, function () {
 				// login and check for lands under defense
 				function (callback) {
 					lom(function (error, data) {
-						callback(error, {towers: data.towersInDefense})
+						callback(error, data)
 					});
 				},
-				// if there's a land under attack, trigger lom-actions
-				function (options, callback) {
-					if (options.towers.length > 0) {
-						attack(options.towers[0].slot, app, function (error, data) {
-							callback(null, data);
-						});
-					}
+				function(options, callback){
+					attack(options, function (error, data) {
+						callback(null, data);
+					});
 				}
 			], function (error, data) {
 				console.log('lom-action check complete');

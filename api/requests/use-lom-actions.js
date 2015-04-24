@@ -3,12 +3,11 @@
  * handle using up LoM actions
  */
 
-var attack = require('../../services/lom-actions');
+var lomAttack = require('../../services/lom-actions');
 
 module.exports = function (app) {
 	app.get('/api/requests/use-lom-actions/:tower', function (request, response) {
-		attack(request.params.tower, app, function (data) {
-
+		lomAttack({ id: request.params.tower }, function (data) {
 			response.json(data);
 		});
     });

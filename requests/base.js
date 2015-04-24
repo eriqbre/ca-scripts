@@ -54,7 +54,9 @@ module.exports = function (options, callback) {
                 });
             })
             .on('error', function (error) {
-                console.log(error);
+		        if (error.code !== 'ETIMEDOUT'){
+			        console.log(error);
+		        }
             })
     }, function (error, response) {
         callback(error, response);
