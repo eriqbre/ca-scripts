@@ -32,6 +32,7 @@ module.exports = function (app) {
     // request routes
     require('./requests/loadouts')(app);
     require('./requests/login')(app);
+    require('./requests/lom-check')(app);
     require('./requests/use-lom-actions')(app);
 
     // catchall for any unhandled route

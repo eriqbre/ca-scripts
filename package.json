@@ -19,7 +19,8 @@
     "node-schedule": "^0.2.6",
     "request": "^2.55.0",
     "tough-cookie": "^0.12.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "url-parse": "^1.0.0"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,7 @@
 /**
  * Created by ebreland on 4/11/15.
- * retribution=400000008563610_1422875732
- * sr=400000007931960_1332286643
+ * retribution = 400000008563610_1422875732
+ * sr =4 00000007931960_1332286643
  */
 
 var domain = 'https://web3.castleagegame.com',
