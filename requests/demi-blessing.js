@@ -8,6 +8,7 @@ var request = require('../requests/base'),
     form = require('../config/forms/demi-blessing');
 
 module.exports = function (options, callback) {
+    var _this = this;
     options = form(options);
 
     request(options, function (error, response) {
