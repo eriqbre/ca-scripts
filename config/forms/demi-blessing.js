@@ -1,20 +1,21 @@
 /**
  * Created by ebreland on 4/23/15.
  */
-var routes = require('../routes');
+var routes = require('../routes'),
+    _ = require('underscore');
 
 module.exports = function (options) {
     var today = new Date,
         dayOfWeek,
         daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
-        result = {
+        result = _.extend(options, {
             form: {
                 action: 'tributeHeader',
                 ajax: '1',
                 symbol: options.default
             },
             url: routes.index
-        };
+        });
 
     // each toon can override the default blessing with their own default, or with a day-specific blessing
     if (options.config && options.config['demi-blessing']) {
