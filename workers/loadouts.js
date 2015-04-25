@@ -8,7 +8,7 @@ var app = require('../app'),
 	changeLoadouts = require('../services/change-loadouts');
 
 app.listen(cronfigs.loadouts.port, function () {
-	console.log('running loadouts cronjob');
+	console.log('starting loadouts cron');
 
 	cronfigs.loadouts.times.map(function (cronfig) {
 		new cronJob({

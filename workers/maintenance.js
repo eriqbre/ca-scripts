@@ -9,7 +9,7 @@ var app = require('../app'),
     maintenance = require('../services/maintenance');
 
 app.listen(3025, function () {
-    console.log('starting maintenance run');
+    console.log('starting maintenance cron');
 
     new cronJob({
         cronTime: cronfigs.maintenance.time,
