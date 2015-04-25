@@ -33,7 +33,7 @@ app.listen(3024, function () {
 			});
 		},
 		start: true,
-		timeZone: 'America/New_York'
+		timeZone: cronfigs.timeZone
 	});
 });
 

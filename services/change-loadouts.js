@@ -8,7 +8,7 @@ var async = require('async'),
     setToon = require('../config/toon'),
     _ = require('underscore');
 
-module.exports = function (id, app, callback) {
+module.exports = function (id, callback) {
     async.waterfall([
         // execute login sequence for battle loadouts
         function (callback) {

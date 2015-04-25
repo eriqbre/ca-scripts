@@ -29,7 +29,8 @@ module.exports = function (data, callback) {
 
     parse = function (response, callback) {
         var $ = cheerio.load(response.body),
-            data = response.data;
+            data = response.data,
+            tributeHeader = $('input[value="tributeHeader"]');
 
         // parse name
         data.name = '';
@@ -54,7 +55,16 @@ module.exports = function (data, callback) {
         data.xpNeeded = parseInt($('div#header_player_xp_needed strong').text());
 
         // parse demi-blessing available
-        data.demiBlessingAvailable = $('input[value="tributeHeader"]').length > 0;
+        if (tributeHeader) {
+            data.demiBlessing = {
+                available: false
+            };
+        } else {
+            data.demiBlessing = {
+                available: true,
+                default: tributeHeader.parent('form').find('input[name="symbol"]').value()
+            };
+        }
 
         // parse item archive active
         data.itemArchiveActive = $('input[value="enableItemArchiveBonusHeader"]').length === 0;

@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 module.exports = function (data) {
     var toon = {
-        demiBlessingAvailable: data.data.demiBlessingAvailable,
+        demiBlessing: data.data.demiBlessing,
         energy: data.data.energy,
         health: data.data.health,
         heroCrystalCollected: data.data.heroCrystalCollected,

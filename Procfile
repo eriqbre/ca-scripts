@@ -1,3 +1,4 @@
 web: node server.js
 worker: node workers/loadouts.js
-worker: node --debug workers/lom-actions.js
+#worker: node workers/lom-actions.js
+worker: node --debug workers/maintenance.js

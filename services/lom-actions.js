@@ -55,10 +55,10 @@ module.exports = function (options, callback) {
             });
         },
         formAttack = function (options) {
-            var availableTargets = options.tower.toons,// from this, we need the toon.form
+            var availableTargets = (options.tower || options.towersInDefense[0]).toons,// from this, we need the toon.form
                 availableAttackers = options.toons,// from this, we need the jar
                 result = {
-                    id: options.id,
+                    id: options.id || options.towersInDefense[0].slot,
                     form: {},
                     jar: {}
                 };
@@ -143,35 +143,32 @@ module.exports = function (options, callback) {
         },
         // grab one of the toons and enter the tower to get data about the tower
         function (options, callback) {
-	        // allow for multiple towers in defense at the same time
+            // if a tower was specified, then attack it
+            if (options.id) {
+                console.log('entering tower ' + tower);
+                landOfMistTower({id: tower, jar: options.toons[0].jar}, function (error, data) {
+                    if (error) callback(error, null);
 
-			console.log('entering tower ' + tower);
-            landOfMistTower({id: tower, jar: options.toons[0].jar}, function (error, data) {
-                if (error) callback(error, null);
+                    options.tower = {
+                        toons: data.toons,
+                        actionsRemaining: data.actionsRemaining,
+                        timeRemaining: data.timeRemaining
+                    };
 
-                options.tower = {
-                    toons: data.toons,
-                    actionsRemaining: data.actionsRemaining,
-                    timeRemaining: data.timeRemaining
-                };
-
-                callback(null, options);
-            });
-        },
-        // attack the tower
-        function (options, callback) {
-            actionsRemaining = options.tower.actionsRemaining;
-            options.id = tower;
-
-            if (actionsRemaining > lomConfigs.floor) {
-	            console.log('triggering attack on tower ' + tower + ' with ' + actionsRemaining + ' actions remaining');
-                attack(options, function (error, data) {
                     callback(null, options);
                 });
             } else {
-	            console.log('not enough actions remaining, exiting land');
-	            callback(null, options);
+                // allow for multiple towers in defense at the same time
+                console.log('multiple towers available for attack');
+
+                callback(null, options);
             }
+        },
+        // attack the tower
+        function (options, callback) {
+            attack(options, function (error, data) {
+                callback(null, options);
+            });
         }
     ], function (error, data) {
         if (callback) {

@@ -15,11 +15,17 @@ module.exports = function (options, callback) {
     async.waterfall([
         // get the toons
         function (callback) {
-            toonService.getToons({roles: options.id}, function (error, data) {
-                if (error) callback(error, null);
+            // if the toons were not already defined, go find them by role
+            if (!options.toons) {
+                toonService.getToons({roles: options.id}, function (error, data) {
+                    if (error) callback(error, null);
 
-                callback(error, {role: options.role, toons: data});
-            });
+                    callback(error, {role: options.role, toons: data});
+                });
+            } else {
+                // if the toons were already passed into the sequence, just log them in
+                callback(null, {roles: options.roles, toons: options.toons});
+            }
         },
         // login each toon
         function (options, callback) {

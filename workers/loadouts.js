@@ -3,36 +3,22 @@
  */
 
 var app = require('../app'),
-	_ = require('underscore'),
 	cronJob = require('cron').CronJob,
 	cronfigs = require('../config/cron'),
 	changeLoadouts = require('../services/change-loadouts');
 
-app.listen(3023, function () {
-    console.log('running');
+app.listen(cronfigs.loadouts.port, function () {
+	console.log('running loadouts cronjob');
 
-	cronfigs.loadouts.map(function (cronfig) {
+	cronfigs.loadouts.times.map(function (cronfig) {
 		new cronJob({
 			cronTime: cronfig.time,
 			onTick: function () {
-				changeLoadouts(cronfig.type, app);
+				changeLoadouts(cronfig.type);
 			},
 			start: true,
-			timeZone: 'America/New_York'
+			timeZone: cronfigs.timeZone
 		});
 	});
-
-	// heartbeat for the dynos, let's try it without first :)
-	/*
-	 ["40 * * * *", "10 * * * *"].map(function (keepAlive) {
-	 new cronJob({
-	 cronTime: keepAlive,
-	 onTick: function () {
-	 console.log('keep alive');
-	 },
-	 start: true,
-	 timeZone: 'America/New_York'
-	 });
-	 });*/
 });
 
