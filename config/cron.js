@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-    port: 3001,
+    port: 4001,
     timeZone: 'America/New_York',
     loadouts: {
         times: [

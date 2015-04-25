@@ -1,2 +1,2 @@
 web: node server.js
-worker: node --debug workers.js
+worker: node workers.js

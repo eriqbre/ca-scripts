@@ -1,6 +1,6 @@
 /**
  * Created by ebreland on 4/25/15.
- * get all toons participating in this run by role
+ * maintenance tasks are run often, these are the mindless collection tasks we all know and love
  * todo: enhance this tool by recording when the bot should next pull a toon
  */
 
@@ -26,14 +26,15 @@ module.exports = function (callback) {
         });
 
         async.waterfall([
+            // log in these toons and get to work
             function (callback) {
-                // log in these toons and get to work
                 login({roles: cronfigs.maintenance.roles, toons: toons}, function (error, data) {
                     callback(null, data);
                 });
             },
+            // run maintenance scripts
             function (options, callback) {
-                // all toons should now be logged in
+                // run them in parallel since none of these depend on each other
                 async.parallel([
                     // run toons with demi-blessings
                     function (callback) {
@@ -128,15 +129,18 @@ module.exports = function (callback) {
                         });
                     }
                 ], function (error, data) {
+                    // all maintenance tasks are complete
                     callback(error, data);
                 });
             }
         ], function (error, data) {
+            // if any tasks were completed, save them to the database
             if (task.data.length > 0) {
                 task.save(function (error) {
                     callback(null, task);
                 });
             } else {
+                // otherwise just end it
                 callback(null, task);
             }
         });
