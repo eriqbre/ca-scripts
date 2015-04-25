@@ -40,7 +40,7 @@ module.exports = function (callback) {
                         async.map(_.filter(options.toons, function (toon) {
                             // return the toons for this requests
                             return toon.roles.indexOf('demi-blessing') > -1 && toon.data.demiBlessing.available;
-                        }), function (toon) {
+                        }), function (toon, callback) {
                             // run the requests
                             if (toon) {
                                 demiBlessing({
@@ -48,9 +48,9 @@ module.exports = function (callback) {
                                     jar: toon.jar,
                                     default: toon.data.demiBlessing.default || '2'
                                 }, function (error, data) {
-                                    task.data.push({
+                                    task.data.push(_.extend(data, {
                                         type: 'demi-blessing', toon: toon.name
-                                    });
+                                    }));
                                     callback(null, data);
                                 });
                             } else {
@@ -66,7 +66,7 @@ module.exports = function (callback) {
                         async.map(_.filter(options.toons, function (toon) {
                             // return the toons for this requests
                             return toon.roles.indexOf('set-item-archives') > -1 && !toon.data.itemArchiveActive;
-                        }), function (toon) {
+                        }), function (toon, callback) {
                             if (toon) {
                                 // run the requests
                                 itemArchives({config: toon.configs, jar: toon.jar}, function (error, data) {
@@ -88,7 +88,7 @@ module.exports = function (callback) {
                         async.map(_.filter(options.toons, function (toon) {
                             // return the toons for this requests
                             return toon.roles.indexOf('collect-resources') > -1 && !toon.data.resourcesCollected;
-                        }), function (toon) {
+                        }), function (toon, callback) {
                             if (toon) {
                                 // run the requests
                                 collectResources({config: toon.configs, jar: toon.jar}, function (error, data) {
@@ -110,7 +110,7 @@ module.exports = function (callback) {
                         async.map(_.filter(options.toons, function (toon) {
                             // return the toons for this requests
                             return toon.roles.indexOf('collect-hero-crystal') > -1 && !toon.data.heroCrystalCollected;
-                        }), function (toon) {
+                        }), function (toon, callback) {
                             if (toon) {
                                 // run the requests
                                 heroCrystal({config: toon.configs, jar: toon.jar}, function (error, data) {

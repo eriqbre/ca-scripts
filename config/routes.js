@@ -18,5 +18,6 @@ module.exports = {
     landOfMistTower: function (tower) {
         return base + 'guildv2_conquest_expansion.php?guild_id=400000008563610_1422875732&slot=' + tower;
     },
-    login: base + 'connect_login.php'
+    login: base + 'connect_login.php',
+    oracle: base + 'symbols.php'
 };

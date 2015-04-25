@@ -8,10 +8,20 @@ var request = require('../requests/base'),
     form = require('../config/forms/demi-blessing');
 
 module.exports = function (options, callback) {
-    options.url = routes.index;
-    options.form = form(options);
+    options = form(options);
 
     request(options, function (error, response) {
-        callback(null, {});
+        _this.parse(options, function (data) {
+            callback(null, data);
+        });
     });
+
+    parse = function (options, callback) {
+        var symbols = ['energy', 'attack', 'defense', 'health', 'stamina'],
+            result = {
+                tribute: symbols[parseInt(options.form.symbol)]
+            };
+
+        callback(result);
+    };
 };

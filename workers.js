@@ -8,7 +8,7 @@ var app = require('./app'),
     changeLoadouts = require('./services/change-loadouts'),
     maintenance = require('./services/maintenance');
 
-app.listen(3001, function () {
+app.listen(cronfigs.port, function () {
     console.log('cron jobs');
 
     // cron for changing loadouts

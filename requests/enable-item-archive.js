@@ -12,6 +12,6 @@ module.exports = function (options, callback) {
     options.form = form;
 
     request(options, function (error, response) {
-        callback(null, null);
+        callback(null, {});
     });
 };
