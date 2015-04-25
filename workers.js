@@ -2,11 +2,11 @@
  * Created by ebreland on 4/25/15.
  */
 
-var app = require('../app'),
+var app = require('./app'),
     cronJob = require('cron').CronJob,
-    cronfigs = require('../config/cron'),
-    changeLoadouts = require('../services/change-loadouts'),
-    maintenance = require('../services/maintenance');
+    cronfigs = require('./config/cron'),
+    changeLoadouts = require('./services/change-loadouts'),
+    maintenance = require('./services/maintenance');
 
 app.listen(3001, function () {
     console.log('cron jobs');
