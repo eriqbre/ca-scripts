@@ -10,6 +10,18 @@ var request = require('request'),
 module.exports = function (options, callback) {
     //require('request-debug')(request);
     var _this = this,
+        data = {
+            followAllRedirects: true,
+            followRedirect: true,
+            formData: form,
+            headers: headers,
+            jar: jar,
+            method: options.method,
+            //proxy: 'http://127.0.0.1:8888',
+            strictSSL: false,
+            timeout: 5000,
+            url: url
+        },
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'
         },
@@ -28,18 +40,7 @@ module.exports = function (options, callback) {
     }
 
     async.retry(5, function (callback, results) {
-        request({
-            followAllRedirects: true,
-            followRedirect: true,
-            formData: form,
-            headers: headers,
-            jar: jar,
-            method: options.method,
-            //proxy: 'http://127.0.0.1:8888',
-            strictSSL: false,
-            timeout: 5000,
-            url: url
-        }, function (error, response) {
+        request(data, function (error, response) {
             callback(error, response);
         })
             .on('response', function (response) {
