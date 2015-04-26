@@ -48,13 +48,13 @@ app.listen(cronfigs.port, function () {
             async.waterfall([
                 // login and check for lands under defense
                 function (callback) {
+                    lom(function (error, data) {
+                        callback(error, data)
+                    });
                     /*
-                     lom(function (error, data) {
-                     callback(error, data)
-                     });*/
                     lomAttack({id: '1'}, function (data) {
                         response.json(data);
-                    });
+                     });*/
                 },
                 function (options, callback) {
                     attack(options, function (error, data) {

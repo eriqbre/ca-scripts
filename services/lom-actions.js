@@ -17,10 +17,12 @@ module.exports = function (options, callback) {
         role = 'lom-actions',
         attack = function (options, callback) {
             lomAttack(formAttack(options), function (error, data) {
-                var remainingTokens = 0;
-                options.tower.actionsRemaining = data.actionsRemaining;
-                options.tower.timeRemaining = data.timeRemaining;
-                options.tower.toons = data.toons;
+                var remainingTokens = 0,
+                    tower = (options.tower || options.towersInDefense[0]);
+
+                tower.actionsRemaining = data.actionsRemaining;
+                tower.timeRemaining = data.timeRemaining;
+                tower.toons = data.toons;
 
                 // after every attack, check remaining actions
                 actionsRemaining = data.actionsRemaining;
@@ -41,14 +43,14 @@ module.exports = function (options, callback) {
                         remainingTokens += toon.data.tokens;
                 });
 
-                options.tower.totalHealth = 0;
-                _.each(options.tower.toons, function (toon) {
-                    options.tower.totalHealth += toon.health;
+                tower.totalHealth = 0;
+                _.each(tower.toons, function (toon) {
+                    tower.totalHealth += toon.health;
                 });
-                console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + options.tower.totalHealth + ' / health/action ' + options.tower.totalHealth / actionsRemaining);
+                console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
 
                 // don't use all actions!
-                if (actionsRemaining > lomConfigs.floor && remainingTokens > 0) {
+                if ((actionsRemaining > lomConfigs.floor || tower.healthPerAction > lomConfigs.healthPerActionTarget) && remainingTokens > 0) {
                     --actionsRemaining;
                     attack(options, callback);
                 }

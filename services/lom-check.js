@@ -3,6 +3,7 @@
  */
 
 var async = require('async'),
+	login = require('../requests/sequences/login-sequence'),
     lom = require('../requests/sequences/lom-check'),
 	lomActions = require('./lom-actions'),
 	lomTower = require('../requests/lom-tower'),
@@ -17,11 +18,23 @@ module.exports = function (callback) {
                 callback(error, data);
             });
         },
+		// grab an attacker and scope out the tower
+		function (options, callback) {
+			if (options.towersInDefense.length > 0) {
+				login({id: 'lom-actions'}, function (error, data) {
+					options.toons = data.toons;
+
+					callback(null, options);
+				});
+			} else {
+				callback(null, options);
+			}
+		},
 	    // if there are lands under attack, get the remaining actions in each
 	    function (options, callback) {
-		    if (options.towersInDefense.length > 0) {
+			if (options.towersInDefense.length > 0 && options.toons.length > 0) {
 			    async.map(options.towersInDefense, function(tower, callback){
-				    lomTower({id: tower.slot, jar: options.jar}, function (error, data) {
+					lomTower({id: tower.slot, jar: options.toons[0].jar}, function (error, data) {
 					    _.extend(tower, {
 						    toons: data.toons,
 						    actionsRemaining: data.actionsRemaining,
