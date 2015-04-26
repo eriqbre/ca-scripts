@@ -8,10 +8,12 @@ var domain = 'https://web3.castleagegame.com',
     base = domain + '/castle_ws/';
 
 module.exports = {
-    domain: domain,
-    base: base,
     alliance: base + 'general_alliance.php',
+    base: base,
+    battle: 'guild_battle.php',
     changeLoadout: base + 'hot_swap_ajax_handler.php ',
+    domain: domain,
+    hvh: base + 'ten_battle.php',
     index: base + 'index.php',
     keep: base + 'keep.php',
     landOfMist: base + 'guildv2_conquest_command.php',
@@ -19,5 +21,6 @@ module.exports = {
         return base + 'guildv2_conquest_expansion.php?guild_id=400000008563610_1422875732&slot=' + tower;
     },
     login: base + 'connect_login.php',
-    oracle: base + 'symbols.php'
+    oracle: base + 'symbols.php',
+    tvt: base + 'ten_battle.php'
 };

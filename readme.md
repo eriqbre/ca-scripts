@@ -10,3 +10,4 @@ todo:
     - odin 10v10 and 100v100; guard
     - baramos 10v10 and 100v100; df
 - auto-siege monsters (maintenance)
+- save jar and reuse (if possible)
