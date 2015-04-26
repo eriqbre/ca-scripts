@@ -17,46 +17,50 @@ module.exports = function (options, callback) {
         role = 'lom-actions',
         attack = function (options, callback) {
             lomAttack(formAttack(options), function (error, data) {
-                var remainingTokens = 0,
-                    tower = (options.tower || options.towersInDefense[0]);
-
-                tower.actionsRemaining = data.actionsRemaining;
-                tower.timeRemaining = data.timeRemaining;
-                tower.toons = data.toons;
-
-                // after every attack, check remaining actions
-                actionsRemaining = data.actionsRemaining;
-
-                // find the attacker used
-                var updatedToons = _.filter(options.toons, function (toon) {
-                    return toon.caId === data.attacker;
-                });
-
-                // update remaining tokens for the current attacker
-                if (updatedToons.length === 1) {
-                    updatedToons[0].data.tokens = data.tokens;
-                }
-
-                // update remaining tokens
-                _.each(options.toons, function (toon) {
-                    if (toon.data && toon.data.tokens > 0)
-                        remainingTokens += toon.data.tokens;
-                });
-
-                tower.totalHealth = 0;
-                _.each(tower.toons, function (toon) {
-                    tower.totalHealth += toon.health;
-                });
-                console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
-
-                // don't use all actions!
-                if ((actionsRemaining > lomConfigs.floor || tower.healthPerAction > lomConfigs.healthPerActionTarget) && remainingTokens > 0) {
-                    --actionsRemaining;
-                    attack(options, callback);
-                }
-                // once remaining actions hits a predetermined number, break out and end
-                else {
+                if (data.break) {
                     callback(null, options);
+                } else {
+                    var remainingTokens = 0,
+                        tower = (options.tower || options.towersInDefense[0]);
+
+                    tower.actionsRemaining = data.actionsRemaining;
+                    tower.timeRemaining = data.timeRemaining;
+                    tower.toons = data.toons;
+
+                    // after every attack, check remaining actions
+                    actionsRemaining = data.actionsRemaining;
+
+                    // find the attacker used
+                    var updatedToons = _.filter(options.toons, function (toon) {
+                        return toon.caId === data.attacker;
+                    });
+
+                    // update remaining tokens for the current attacker
+                    if (updatedToons.length === 1) {
+                        updatedToons[0].data.tokens = data.tokens;
+                    }
+
+                    // update remaining tokens
+                    _.each(options.toons, function (toon) {
+                        if (toon.data && toon.data.tokens > 0)
+                            remainingTokens += toon.data.tokens;
+                    });
+
+                    tower.totalHealth = 0;
+                    _.each(tower.toons, function (toon) {
+                        tower.totalHealth += toon.health;
+                    });
+                    console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
+
+                    // don't use all actions!
+                    if ((actionsRemaining > lomConfigs.floor || tower.healthPerAction > lomConfigs.healthPerActionTarget) && remainingTokens > 0) {
+                        --actionsRemaining;
+                        attack(options, callback);
+                    }
+                    // once remaining actions hits a predetermined number, break out and end
+                    else {
+                        callback(null, options);
+                    }
                 }
             });
         },
@@ -69,6 +73,9 @@ module.exports = function (options, callback) {
                     jar: {}
                 };
 
+            if (availableTargets.length === 0 || availableAttackers.length === 0) {
+                return {};
+            }
             // targets - sort by cleric, highest level, health > 0
             availableTargets = _.select(availableTargets, function (toon) {
                 return toon.health > 0;

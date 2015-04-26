@@ -9,13 +9,17 @@ var request = require('../requests/base'),
     parser = require('../parsers/lom-tower');
 
 module.exports = function (options, callback) {
-    options.url = routes.landOfMistTower(options.id);
-    options.form = form(options.form);
+    if (options.form) {
+        options.url = routes.landOfMistTower(options.id);
+        options.form = form(options.form);
 
-    request(options, function (error, response) {
-        parser(response, function (error, data) {
-	        data.attacker = options.attacker;
-            callback(null, data);
+        request(options, function (error, response) {
+            parser(response, function (error, data) {
+                data.attacker = options.attacker;
+                callback(null, data);
+            });
         });
-    });
+    } else {
+        callback(null, _.extend(data, {break: true}));
+    }
 };
