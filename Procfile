@@ -1,2 +1,2 @@
-web: node server.js
-worker: node workers.js
+web: forever start server.js
+worker: forever start workers.js
