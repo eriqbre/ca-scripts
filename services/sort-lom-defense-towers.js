@@ -28,10 +28,10 @@ module.exports = function(options){
 	});
 
 	// prioritize lands
-	towers = _.sortBy(options.towersInDefense, function(tower){
-		var sort,
-			healthPerAction = tower.totalHealth/tower.actionsRemaining;
+	options.towersInDefense = _.sortBy(options.towersInDefense, function (tower) {
+		var sort;
 		// take time remaining into account
+		total.healthPerAction = tower.totalHealth / tower.actionsRemaining;
 
 		sort = healthPerAction;
 		return sort;

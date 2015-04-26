@@ -41,7 +41,11 @@ module.exports = function (options, callback) {
                         remainingTokens += toon.data.tokens;
                 });
 
-                console.log('actions remaining: ' + actionsRemaining + '/ tokens remaining: ' + remainingTokens);
+                options.tower.totalHealth = 0;
+                _.each(options.tower.toons, function (toon) {
+                    options.tower.totalHealth += toon.health;
+                });
+                console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + options.tower.totalHealth + ' / health/action ' + options.tower.totalHealth / actionsRemaining);
 
                 // don't use all actions!
                 if (actionsRemaining > lomConfigs.floor && remainingTokens > 0) {
@@ -121,7 +125,7 @@ module.exports = function (options, callback) {
         // execute login sequence for lom actions
         function (callback) {
             login({id: role}, function (error, data) {
-                callback(null, data);
+                callback(null, _.extend(options, data));
             });
         },
         // change loadouts for any toons that have configs specified
@@ -144,9 +148,10 @@ module.exports = function (options, callback) {
         // grab one of the toons and enter the tower to get data about the tower
         function (options, callback) {
             // if a tower was specified, then attack it
+            //options.id = '1';
             if (options.id) {
-                console.log('entering tower ' + tower);
-                landOfMistTower({id: tower, jar: options.toons[0].jar}, function (error, data) {
+                console.log('entering tower ' + options.id);
+                landOfMistTower({id: options.id, jar: options.toons[0].jar}, function (error, data) {
                     if (error) callback(error, null);
 
                     options.tower = {
