@@ -14,6 +14,10 @@ if (cluster.isMaster){
     for (var i = 0; i< cpus; i++){
         cluster.fork();
     }
+
+    cluster.on('exit', function (worker, code, signal) {
+        cluster.fork();
+    });
 } else {
     app.listen(cronfigs.port, function () {
         console.log('cron jobs');
