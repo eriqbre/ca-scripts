@@ -194,8 +194,6 @@ module.exports = function (options, callback) {
 	            task.save(function(error){
 		            callback(null, options);
 	            });
-
-	            console.log(data.towersInDefense[0]);
             });
         }
     ], function (error, data) {
