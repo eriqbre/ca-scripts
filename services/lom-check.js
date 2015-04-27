@@ -11,6 +11,7 @@ var async = require('async'),
 	_ = require('underscore');
 
 module.exports = function (callback) {
+	console.log('start lom-check');
     async.waterfall([
         // login and check for lands under defense
         function (callback) {

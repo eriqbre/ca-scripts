@@ -51,7 +51,17 @@ module.exports = function (options, callback) {
                     _.each(tower.toons, function (toon) {
                         tower.totalHealth += toon.health;
                     });
+
                     console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
+					task.data.push({
+						toon: updatedToons[0].name,
+						actionsRemaining: actionsRemaining,
+						totalHealth: tower.totalHealth,
+						healthPerAction: tower.healthPerAction
+					});
+
+	                // re-sort the towers
+	                options = lomTowerSort(options);
 
                     // don't use all actions!
                     if ((actionsRemaining > lomConfigs.floor || tower.healthPerAction > lomConfigs.healthPerActionTarget) && remainingTokens > 0) {
@@ -184,7 +194,10 @@ module.exports = function (options, callback) {
         // attack the tower
         function (options, callback) {
             attack(options, function (error, data) {
-                callback(null, options);
+	            // save task in mongo
+	            task.save(function(error){
+		            callback(null, options);
+	            });
             });
         }
     ], function (error, data) {
