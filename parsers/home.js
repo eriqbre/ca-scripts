@@ -63,14 +63,14 @@ module.exports = function (response, callback) {
     // check for an active 10v10 battle, get the battle_id
     if (tenBattle) {
         data.tvt = {
-            id: queryString(tenBattle)
+            id: queryString(tenBattle, 'battle_id')
         }
     }
 
     // check for an active 100v100 battle and get the battle_id
     if (hundredBattle) {
         data.hvh = {
-            id: queryString(tenBattle)
+            id: queryString(tenBattle, 'battle_id')
         }
     }
 
