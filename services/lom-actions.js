@@ -9,10 +9,11 @@ var async = require('async'),
     lomAttack = require('../requests/lom-attack'),
     landOfMistTower = require('../requests/lom-tower'),
 	lomTowerSort = require('./sort-lom-defense-towers'),
+    Task = require('../models/task'),
     _ = require('underscore');
 
 module.exports = function (options, callback) {
-    var _this = this,
+    var _this = this, task = new Task({name: 'lom-actions', type: 'defend-lom', data: []}),
         actionsRemaining = 1000,
         role = 'lom-actions',
         attack = function (options, callback) {
@@ -65,6 +66,11 @@ module.exports = function (options, callback) {
             });
         },
         formAttack = function (options) {
+            // if no tower is present, end it
+            if (!(options.tower || options.towersInDefense[0])) {
+                return {};
+            }
+
             var availableTargets = (options.tower || options.towersInDefense[0]).toons,// from this, we need the toon.form
                 availableAttackers = options.toons,// from this, we need the jar
                 result = {
@@ -73,9 +79,6 @@ module.exports = function (options, callback) {
                     jar: {}
                 };
 
-            if (availableTargets.length === 0 || availableAttackers.length === 0) {
-                return {};
-            }
             // targets - sort by cleric, highest level, health > 0
             availableTargets = _.select(availableTargets, function (toon) {
                 return toon.health > 0;

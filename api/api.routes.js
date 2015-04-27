@@ -28,12 +28,13 @@ module.exports = function (app) {
 
 	// process routes
 	require('./processes/create-bot')(app);
+    require('./processes/10v10-actions')(app);
+    require('./processes/loadouts')(app);
+    require('./processes/lom-check')(app);
+    require('./processes/use-lom-actions')(app);
 
     // request routes
-    require('./requests/loadouts')(app);
     require('./requests/login')(app);
-    require('./requests/lom-check')(app);
-    require('./requests/use-lom-actions')(app);
 
     // catchall for any unhandled route
     app.get('*', function (request, response) {

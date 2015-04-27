@@ -7,7 +7,7 @@ var changeLoadouts = require('../../services/change-loadouts');
 
 module.exports = function (app) {
     app.get('/api/requests/loadouts/:id', function (request, response) {
-        changeLoadouts(request.params.id, app, function (data) {
+        changeLoadouts({id: request.params.id}, function (data) {
             response.json(data);
         });
     });

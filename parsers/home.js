@@ -4,12 +4,15 @@
 
 var cheerio = require('cheerio'),
     parseLoadouts = require('../parsers/loadouts'),
+    queryString = require('../helpers/query-string'),
     _ = require('underscore');
 
 module.exports = function (response, callback) {
     var $ = cheerio.load(response.body),
         data = response.data,
-        tributeHeader = $('input[value="tributeHeader"]');
+        tributeHeader = $('input[value="tributeHeader"]'),
+        tenBattle = $('a[href*="ten_battle.php?battle_id="]').attr('href'),
+        hundredBattle = $('a[href*="hundred_battle.php?battle_id="]').attr('href');
 
     // parse name
     data.name = '';
@@ -55,6 +58,24 @@ module.exports = function (response, callback) {
     data.heroCrystalCollected = $('input[value="conquestDemiCollectHeader"]').length === 0;
 
     data.success = data.xpNeeded > 0;
+
+
+    // check for an active 10v10 battle, get the battle_id
+    if (tenBattle) {
+        data.tvt = {
+            id: queryString(tenBattle)
+        }
+    }
+
+    // check for an active 100v100 battle and get the battle_id
+    if (hundredBattle) {
+        data.hvh = {
+            id: queryString(tenBattle)
+        }
+    }
+
+    // check for an active fbb and get the battle_id
+
 
     callback(null, data);
 };

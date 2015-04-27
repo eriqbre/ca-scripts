@@ -2,7 +2,7 @@
  * Created by Bridget on 4/13/2015.
  */
 
-module.exports = function (data, role) {
+module.exports = function (data, role, action) {
     var result = {
         ajax_action: 'change_loadout',
         target_loadout: '',
@@ -13,7 +13,9 @@ module.exports = function (data, role) {
 		result.target_loadout = data.config.loadout.id;
 	} else if (role && data.configs && data.configs[role] && data.configs[role]['loadout']){
 		result.target_loadout = data.configs[role]['loadout'];
-	}
+    } else if (data.loadout) {
+        result.target_loadout = data.loadout;
+    }
 
     return result;
 };

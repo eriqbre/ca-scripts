@@ -5,13 +5,10 @@
 var app = require('./app'),
     async = require('async'),
     attack = require('./services/lom-actions'),
-//cluster = require('cluster'),
-//cpus = require('os').cpus().length,
     cronJob = require('cron').CronJob,
     cronfigs = require('./config/cron'),
     changeLoadouts = require('./services/change-loadouts'),
     lom = require('./services/lom-check'),
-    lomAttack = require('./services/lom-actions'),
     maintenance = require('./services/maintenance');
 
 app.listen(cronfigs.port, function () {
@@ -22,7 +19,9 @@ app.listen(cronfigs.port, function () {
         new cronJob({
             cronTime: cronfig.time,
             onTick: function () {
-                changeLoadouts(cronfig.type);
+                changeLoadouts({id: cronfig.type}, function (data) {
+                    console.log('loadouts worker finished')
+                });
             },
             start: true,
             timeZone: cronfigs.timeZone
@@ -45,24 +44,8 @@ app.listen(cronfigs.port, function () {
     new cronJob({
         cronTime: cronfigs.lomActions.time,
         onTick: function () {
-            async.waterfall([
-                // login and check for lands under defense
-                function (callback) {
-                    lom(function (error, data) {
-                        callback(error, data)
-                    });
-                    /*
-                    lomAttack({id: '1'}, function (data) {
-                        response.json(data);
-                     });*/
-                },
-                function (options, callback) {
-                    attack(options, function (error, data) {
-                        callback(null, data);
-                    });
-                }
-            ], function (error, data) {
-                console.log('lom-action check complete');
+            lom(function (error, data) {
+                console.log('completed lom-check');
             });
         },
         start: true,
