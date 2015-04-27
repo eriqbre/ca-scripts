@@ -5,6 +5,15 @@
 module.exports = {
     port: 4001,
     timeZone: 'America/New_York',
+	hvhActions: {
+		times: [
+			{time: "30 0 5,11,17 * * 1-3", type: 'morning schedule'},
+			{time: "30 0 11,17,23 * * 0,4-6", type: 'night schedule'}
+		]
+	},
+	tvtActions: {
+		time: "30 0 9,3,9 * * *"
+	},
     loadouts: {
         times: [
             {time: "49 5,8,11,14,17,20,23 * * *", type: 'pre-battle'},

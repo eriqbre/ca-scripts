@@ -12,7 +12,9 @@ module.exports = function (response, callback) {
         data = response.data,
         tributeHeader = $('input[value="tributeHeader"]'),
         tenBattle = $('a[href*="ten_battle.php?battle_id="]').attr('href'),
-        hundredBattle = $('a[href*="hundred_battle.php?battle_id="]').attr('href');
+        hundredBattle = $('a[href*="hundred_battle.php?battle_id="]').attr('href'),
+	    fbTimeRemaining = $('span#classicremaining_span'),
+	    fbBattle = $('a[href*="guildv2_battle.php?battle_id="]').attr('href');
 
     // parse name
     data.name = '';
@@ -75,6 +77,11 @@ module.exports = function (response, callback) {
     }
 
     // check for an active fbb and get the battle_id
+	if (hundredBattle) {
+		data.hvh = {
+			id: queryString(tenBattle, 'battle_id')
+		}
+	}
 
 
     callback(null, data);
