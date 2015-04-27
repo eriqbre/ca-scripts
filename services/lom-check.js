@@ -53,7 +53,12 @@ module.exports = function (callback) {
 	    // if there are lands under attack, filter and prioritize
 	    function(options, callback){
 		    if (options.towersInDefense && options.towersInDefense.length > 0){
+			    // filter out toons with no tokens
+			    options.toons = _.filter(options.toons, function(toon){
+				    return toon.data.tokens > 0;
+			    });
 			    lomActions(lomTowerSort(options), function(error, data){
+				    console.log('lom-actions complete')
 				    callback(null, options);
 			    });
 		    } else {
