@@ -148,7 +148,7 @@ module.exports = function (options, callback) {
             }), function (toon, callback) {
                 changeLoadout(toon, role, function (error, data) {
                     if (error) callback(error, null);
-                    toon.data.loadouts = data.loadouts;
+                    //toon.data.loadouts = data.loadouts;
 
                     callback(null, toon);
                 });
