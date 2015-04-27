@@ -12,7 +12,7 @@ module.exports = {
         ]
     },
     lomActions: {
-        time: "11,30,50 * * * *"
+        time: "0 * * * * *"
     },
     maintenance: {
         time: "0,20,40 * * * *",
