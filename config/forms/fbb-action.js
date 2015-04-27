@@ -6,11 +6,18 @@ var guild = require('../guild');
 
 module.exports = function(options){
 	var form = {
-		action: 'enter_battle',
+		action: 'guild_attack',
 		ajax: '1',
+		attack_key: '',
+		attack_type: '',
 		attacker_guild: guild.id,
+		attacking_position: '',
 		battle_type: '2000',
-		defender_guild_id: options.defender_guild_id
+		bqh: '',
+		defender_guild_id: options.defender_guild_id,
+		is_attacker: '',
+		sel_pos: '',
+		target_id: ''
 	};
 
 	return form;

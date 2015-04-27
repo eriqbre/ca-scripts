@@ -60,6 +60,7 @@ module.exports = function (options, callback) {
                         async.waterfall([
                             // set loadouts, if the action specifies it and it's not already set properly
                             function (callback) {
+	                            // todo: find the selected loadout
                                 if (action.loadout && !toon.data.loadouts) {
                                     loadout({jar: toon.jar, loadout: action.loadout}, function (error, data) {
                                         callback(error, {});

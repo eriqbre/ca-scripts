@@ -13,6 +13,7 @@ module.exports = {
     battle: 'guild_battle.php',
     changeLoadout: base + 'hot_swap_ajax_handler.php ',
     domain: domain,
+	fbbHome: domain + 'guildv2_battle.php',
     hvh: base + 'hundred_battle.php',
     index: base + 'index.php',
     keep: base + 'keep.php',
