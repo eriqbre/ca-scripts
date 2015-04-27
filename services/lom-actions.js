@@ -142,6 +142,8 @@ module.exports = function (options, callback) {
         },
         // change loadouts for any toons that have configs specified
         function (options, callback) {
+            if (1 === 0){
+
             // filter list for only toons that have a loadout config
             async.map(_.filter(options.toons, function (toon) {
                 return (toon.configs && toon.configs[role] && toon.configs[role]['loadout']) ? 1 : 0;
@@ -156,6 +158,7 @@ module.exports = function (options, callback) {
                 // all done with each toon
                 callback(error, options);
             });
+            }
         },
         // grab one of the toons and enter the tower to get data about the tower
         function (options, callback) {
