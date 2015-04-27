@@ -20,7 +20,7 @@ app.listen(cronfigs.port, function () {
             cronTime: cronfig.time,
             onTick: function () {
                 changeLoadouts({id: cronfig.type}, function (data) {
-                    console.log('loadouts worker finished')
+                    console.log(cronfig.type + ' loadouts worker finished')
                 });
             },
             start: true,

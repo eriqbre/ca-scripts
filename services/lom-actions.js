@@ -22,7 +22,10 @@ module.exports = function (options, callback) {
                     callback(null, options);
                 } else {
                     var remainingTokens = 0,
-                        tower = (options.tower || options.towersInDefense[0]);
+                        tower = (options.tower || options.towersInDefense[0]),
+	                    attacker = _.filter(options.toons, function (toon) {
+		                    return toon.caId === data.attacker;
+	                    })[0];
 
                     tower.actionsRemaining = data.actionsRemaining;
                     tower.timeRemaining = data.timeRemaining;
@@ -31,15 +34,8 @@ module.exports = function (options, callback) {
                     // after every attack, check remaining actions
                     actionsRemaining = data.actionsRemaining;
 
-                    // find the attacker used
-                    var updatedToons = _.filter(options.toons, function (toon) {
-                        return toon.caId === data.attacker;
-                    });
-
                     // update remaining tokens for the current attacker
-                    if (updatedToons.length === 1) {
-                        updatedToons[0].data.tokens = data.tokens;
-                    }
+	                attacker.data.tokens = data.tokens;
 
                     // update remaining tokens
                     _.each(options.toons, function (toon) {
@@ -54,7 +50,7 @@ module.exports = function (options, callback) {
 
                     console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
 					task.data.push({
-						toon: updatedToons[0].name,
+						toon: (attacker.name || ''),
 						actionsRemaining: actionsRemaining,
 						totalHealth: tower.totalHealth,
 						healthPerAction: tower.healthPerAction
@@ -198,6 +194,8 @@ module.exports = function (options, callback) {
 	            task.save(function(error){
 		            callback(null, options);
 	            });
+
+	            console.log(data.towersInDefense[0]);
             });
         }
     ], function (error, data) {

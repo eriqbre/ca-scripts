@@ -15,7 +15,7 @@ module.exports = function (options, callback) {
             // skip this step if another process has passed in the toons, already logged in
             if (!options.toons) {
                 login({id: options.id}, function (error, data) {
-                    callback(null, data);
+                    callback(null, _.extend(options, data));
                 });
             } else {
                 callback(null, options);
