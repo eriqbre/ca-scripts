@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-	healthPerActionTarget: 5000,
+	healthPerActionTarget: 3000,
 	ceiling: 1000,
-	floor: 100
+	floor: 200
 };
