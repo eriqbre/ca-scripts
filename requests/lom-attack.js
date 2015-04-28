@@ -6,7 +6,8 @@
 var request = require('../requests/base'),
     routes = require('../config/routes'),
     form = require('../config/forms/lom-attack'),
-    parser = require('../parsers/lom-tower');
+    parser = require('../parsers/lom-tower'),
+	_ = require('underscore');
 
 module.exports = function (options, callback) {
     if (options.form) {
