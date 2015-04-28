@@ -21,6 +21,6 @@ module.exports = function (options, callback) {
             });
         });
     } else {
-        callback(null, _.extend(data, {break: true}));
+        callback(null,{break: true});
     }
 };

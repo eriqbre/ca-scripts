@@ -10,6 +10,7 @@ var express = require('express'),
     methodOverride = require('method-override'),
     mongoose = require('mongoose'),
     morgan = require('morgan'),
+	rollbar = require('rollbar'),
     db = require('./config/db');
 
 mongoose.connect(db.url);
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/*json'}));
 app.use(bodyParser.urlencoded({extended: true, type: 'application/x-www-form-urlencoded'}));
+app.use(rollbar.errorHandler('948d2b80d7b542d09891c9e0a984fda3'));
 app.use(session({
     secret: 'win-win-will-be-a-success',
     key: 'sid',
@@ -45,6 +47,9 @@ app.use(function (request, response, next) {
     }
 });
 
+rollbar.handleUncaughtExceptions('948d2b80d7b542d09891c9e0a984fda3', {
+
+});
 // set up api endpoints
 require('./api/api.routes')(app);
 
