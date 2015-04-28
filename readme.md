@@ -12,3 +12,4 @@ todo:
 - auto-siege monsters (maintenance)
 - save jar and reuse (if possible)
 - lom-active-defense
+- make battle actions generic
