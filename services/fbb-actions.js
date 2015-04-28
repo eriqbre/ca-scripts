@@ -5,17 +5,16 @@
 
 var async = require('async'),
 	attack = require('../requests/fbb-action'),
-	fbbHome = require('../requests/fbb-home'),
-	fbbEnter = require('../requests/fbb-enter'),
+	home = require('../requests/fbb-home'),
+	enter = require('../requests/fbb-enter'),
 	loadout = require('../requests/loadouts'),
 	login = require('../requests/sequences/login-sequence'),
 	Task = require('../models/task'),
 	towers = require('../config/towers'),
 	_ = require('underscore');
 
-modules.exports = function(options, callback){
-	var role = 'fbb-actions',
-		task = new Task({name: role, type: role, data: []}),
+module.exports = function(options, callback){
+	var task = new Task({name: role, type: role, data: []}),
 		trigger = function (options, callback) {
 			attack(options, function (error, data) {
 				// success is defined as the action being triggered, regardless of the success or failure of the action
@@ -31,35 +30,33 @@ modules.exports = function(options, callback){
 	async.waterfall([
 		// log in anyone participating in this role
 		function(callback){
-			login({}, function(error, data){
+			login({ id: options.role }, function(error, data){
 				// add the now-logged-in toons to the options object and pass it along
 				callback(null, _.extend(options, { toons: data.toons }));
 			});
 		},
-		// hit the home page and see if they've logged in
+		// hit the home page and grab the guildId
 		function(options, callback){
-			async.mapSeries(options.toons, function(toon, callback){
-				fbbHome({}, function(error, data){
-					// todo: update toons with data from the main call
-					callback(null, _.extend(toon, {}));
+			async.mapSeries(options.toons[0], function(toon, callback){
+				home({ jar: toon.jar }, function(error, data){
+					// update toons with data from the main call
+					callback(null, _.extend(options, { defender_guild_id: data.defender_guild_id }));
 				});
 			}, function(error, data){
-
+                callback(null, options);
 			});
 		},
-		// if needed, log into battle
-		function(options, callback){
-			async.mapSeries(_.filter(options.toons, function(toon){
-				// todo: return toons that aren't logged in yet
-			}), function(toon, callback){
-				fbbEnter({}, function(error, data){
-					// todo: update the options object with battle information
-					callback(null, _.extend(options, { battle: data.battle }));
-				});
-			}, function(error, data){
-
-			});
-		},
+        // enter the fbb page and click to enter battle if they haven't already
+        function(options, callback){
+            async.mapSeries(options.toons, function(toon, callback){
+                enter({ jar: toon.jar, defender_guild_id: options.defender_guild_id }, function(error, data){
+                    // todo: update toons with data from the main call
+                    callback(null, _.extend(options, { battle: data }));
+                });
+            }, function(error, data){
+                callback(null, options);
+            });
+        },
 		// get tower data for both sides
 		function(options, callback){
 			// get data for all opponent and all allied towers
