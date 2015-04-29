@@ -8,7 +8,7 @@ var async = require('async'),
 	lomActions = require('./lom-actions'),
 	lomTower = require('../requests/lom-tower'),
 	lomTowerSort = require('./sort-lom-defense-towers'),
-	_ = require('underscore');
+	_ = require('lodash');
 
 module.exports = function (callback) {
 	console.log('start lom-check');

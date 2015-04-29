@@ -5,7 +5,7 @@
 var cheerio = require('cheerio'),
     parseLoadouts = require('../parsers/loadouts'),
     queryString = require('../helpers/query-string'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (response, callback) {
     var $ = cheerio.load(response.body),

@@ -9,7 +9,7 @@ var async = require('async'),
     roleService = require('../../services/roles'),
     toonService = require('../../services/toons'),
     login = require('../../requests/login'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (options, callback) {
     async.waterfall([

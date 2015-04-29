@@ -6,7 +6,7 @@
 var parser = require('../parsers/fbb-battle'),
     request = require('../requests/base'),
     routes = require('../config/routes'),
-    form = require('../config/forms/fbb-battle-home');
+    form = require('../config/forms/fbb-battle');
 
 module.exports = function (options, callback) {
     options.url = routes.battle;

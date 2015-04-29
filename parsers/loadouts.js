@@ -3,7 +3,7 @@
  * helper for parsing loadouts from page
  */
 
-var _ = require('underscore'),
+var _ = require('lodash'),
     $ = require('cheerio');
 
 module.exports = function ($) {

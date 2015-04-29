@@ -11,7 +11,7 @@ var async = require('async'),
 	login = require('../requests/sequences/login-sequence'),
 	Task = require('../models/task'),
 	towers = require('../config/towers'),
-	_ = require('underscore');
+	_ = require('lodash');
 
 module.exports = function(options, callback){
 	var task = new Task({name: role, type: role, data: []}),

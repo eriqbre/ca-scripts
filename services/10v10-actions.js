@@ -9,7 +9,7 @@ var async = require('async'),
     loadout = require('../requests/loadouts'),
     login = require('../requests/sequences/login-sequence'),
     Task = require('../models/task'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (options, callback) {
     var role = '10v10-actions',

@@ -2,7 +2,7 @@
  * Created by ebreland on 4/23/15.
  */
 var routes = require('../routes'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (options) {
     var today = new Date,

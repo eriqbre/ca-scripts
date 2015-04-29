@@ -11,7 +11,7 @@
  */
 
 var lomActions = require('../config/lom-actions'),
-	_ = require('underscore');
+	_ = require('lodash');
 
 module.exports = function(options){
 	// filter out towers that are "safe"

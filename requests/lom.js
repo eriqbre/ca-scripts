@@ -6,7 +6,7 @@
 var request = require('../requests/base'),
     routes = require('../config/routes'),
     cheerio = require('cheerio'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (options, callback) {
     var _this = this;

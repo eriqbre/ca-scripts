@@ -13,7 +13,7 @@ var async = require('async'),
     login = require('../requests/sequences/login-sequence'),
     Task = require('../models/task'),
     Toon = require('../models/toon'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     task;
 
 module.exports = function (callback) {

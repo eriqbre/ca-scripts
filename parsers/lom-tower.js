@@ -3,7 +3,7 @@
  */
 
 var cheerio = require('cheerio'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (response, callback) {
     var $ = cheerio.load(response.body),
@@ -17,6 +17,8 @@ module.exports = function (response, callback) {
         levels = [];
 
     data.toons = [];
+	data.totalHealth = 0;
+	data.healthRemaining = 0;
 
 	// parse the id of the attacker
 
@@ -63,16 +65,22 @@ module.exports = function (response, callback) {
     _.each($('img[title="Health"]').parent('div'), function (container, i) {
         var $container = $(container),
             healthRatio = $container.text().trim(),
-            health = healthRatio.split('/');
+            arrayHealth = healthRatio.split('/'),
+	        healthRemaining = parseInt(health[0]),
+	        totalHealth = parseInt(health[1]);
 
-        if (health.length == '2')
-            data.toons.push({
-                health: parseInt(health[0]),
-                class: classes[i],
-                level: levels[i],
-                form: forms[i]
-            });
+	    data.healthRemaining += healthRemaining;
+	    data.totalHealth += totalHealth;
+        data.toons.push({
+            health: health,
+            totalHealth: totalHealth,
+            class: classes[i],
+            level: levels[i],
+            form: forms[i]
+        });
     });
+
+
 
     // parse the time and actions remaining
     if (actions) {

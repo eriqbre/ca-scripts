@@ -2,7 +2,7 @@
  * Created by ebreland on 4/19/15.
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 module.exports = function (data) {
     var result = {

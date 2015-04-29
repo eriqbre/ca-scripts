@@ -6,7 +6,7 @@ var async = require('async'),
     login = require('../requests/sequences/login-sequence'),
     changeLoadouts = require('../requests/loadouts'),
     setToon = require('../config/toon'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (options, callback) {
     async.waterfall([

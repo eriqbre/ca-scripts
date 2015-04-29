@@ -10,7 +10,7 @@ var async = require('async'),
     landOfMistTower = require('../requests/lom-tower'),
 	lomTowerSort = require('./sort-lom-defense-towers'),
     Task = require('../models/task'),
-    _ = require('underscore');
+    _ = require('lodash');
 
 module.exports = function (options, callback) {
     var _this = this, task = new Task({name: 'lom-actions', type: 'defend-lom', data: []}),
@@ -59,10 +59,17 @@ module.exports = function (options, callback) {
 	                // re-sort the towers
 	                options = lomTowerSort(options);
 
-                    // don't use all actions!
-                    if ((actionsRemaining > lomConfigs.floor || tower.healthPerAction > lomConfigs.healthPerActionTarget) && remainingTokens > 0) {
-                        --actionsRemaining;
-                        attack(options, callback);
+	                // define a window of action
+	                // actionsRemaining should be above the floor and below the ceiling
+	                // healthPerAction should be less than the max
+	                // healthRemaining should be less than the max % of totalHealth
+                    if (actionsRemaining > lomConfigs.floor &&
+	                    actionsRemaining < lomConfigs.ceiling &&
+	                    tower.healthPerAction < lomConfigs.healthPerActionTarget &&
+	                    (tower.totalHealth * (lomConfigs.healthPercentage/100)) > tower.healthRemaining &&
+	                    remainingTokens > 0) {
+                            --actionsRemaining;
+                            attack(options, callback);
                     }
                     // once remaining actions hits a predetermined number, break out and end
                     else {
@@ -188,14 +195,7 @@ module.exports = function (options, callback) {
             }
         },
         // attack the tower
-        function (options, callback) {
-            attack(options, function (error, data) {
-	            // save task in mongo
-	            task.save(function(error){
-		            callback(null, options);
-	            });
-            });
-        }
+        attack(options, callback)
     ], function (error, data) {
         if (callback) {
             callback(error, data);
