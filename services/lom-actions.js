@@ -27,13 +27,6 @@ module.exports = function (options, callback) {
 		                    return toon.caId === data.attacker;
 	                    })[0];
 
-                    tower.actionsRemaining = data.actionsRemaining;
-                    tower.timeRemaining = data.timeRemaining;
-                    tower.toons = data.toons;
-
-                    // after every attack, check remaining actions
-                    actionsRemaining = data.actionsRemaining;
-
                     // update remaining tokens for the current attacker
 	                attacker.data.tokens = data.tokens;
 
@@ -41,11 +34,6 @@ module.exports = function (options, callback) {
                     _.each(options.toons, function (toon) {
                         if (toon.data && toon.data.tokens > 0)
                             remainingTokens += toon.data.tokens;
-                    });
-
-                    tower.totalHealth = 0;
-                    _.each(tower.toons, function (toon) {
-                        tower.totalHealth += toon.health;
                     });
 
                     console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
@@ -57,14 +45,15 @@ module.exports = function (options, callback) {
 					});
 
 	                // re-sort the towers
+                    options.tower = tower;
 	                options = lomTowerSort(options);
 
 	                // define a window of action
 	                // actionsRemaining should be above the floor and below the ceiling
 	                // healthPerAction should be less than the max
 	                // healthRemaining should be less than the max % of totalHealth
-                    if (actionsRemaining > lomConfigs.floor &&
-	                    actionsRemaining < lomConfigs.ceiling &&
+                    if (tower.actionsRemaining > lomConfigs.floor &&
+                        tower.actionsRemaining < lomConfigs.ceiling &&
 	                    tower.healthPerAction < lomConfigs.healthPerActionTarget &&
 	                    (tower.totalHealth * (lomConfigs.healthPercentage/100)) > tower.healthRemaining &&
 	                    remainingTokens > 0) {
@@ -80,7 +69,7 @@ module.exports = function (options, callback) {
         },
         formAttack = function (options) {
             // if no tower is present, end it
-            if (!(options.tower || options.towersInDefense[0])) {
+            if (!(options.tower || (options.towersInDefense || [])[0])) {
                 return {};
             }
 
@@ -179,11 +168,7 @@ module.exports = function (options, callback) {
                 landOfMistTower({id: options.id, jar: options.toons[0].jar}, function (error, data) {
                     if (error) callback(error, null);
 
-                    options.tower = {
-                        toons: data.toons,
-                        actionsRemaining: data.actionsRemaining,
-                        timeRemaining: data.timeRemaining
-                    };
+                    options.tower = data;
 
                     callback(null, options);
                 });
@@ -195,7 +180,11 @@ module.exports = function (options, callback) {
             }
         },
         // attack the tower
-        attack(options, callback)
+        function (options, callback) {
+            attack(options, function (error, data) {
+                callback(error, data);
+            })
+        }
     ], function (error, data) {
         if (callback) {
             callback(error, data);

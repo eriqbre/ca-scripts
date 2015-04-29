@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/*json'}));
 app.use(bodyParser.urlencoded({extended: true, type: 'application/x-www-form-urlencoded'}));
-app.use(rollbar.errorHandler('948d2b80d7b542d09891c9e0a984fda3'));
+//app.use(rollbar.errorHandler('948d2b80d7b542d09891c9e0a984fda3'));
 app.use(session({
     secret: 'win-win-will-be-a-success',
     key: 'sid',

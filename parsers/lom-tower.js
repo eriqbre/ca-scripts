@@ -66,13 +66,13 @@ module.exports = function (response, callback) {
         var $container = $(container),
             healthRatio = $container.text().trim(),
             arrayHealth = healthRatio.split('/'),
-	        healthRemaining = parseInt(health[0]),
-	        totalHealth = parseInt(health[1]);
+            healthRemaining = parseInt(arrayHealth[0]),
+            totalHealth = parseInt(arrayHealth[1]);
 
 	    data.healthRemaining += healthRemaining;
 	    data.totalHealth += totalHealth;
         data.toons.push({
-            health: health,
+            health: healthRemaining,
             totalHealth: totalHealth,
             class: classes[i],
             level: levels[i],
@@ -81,10 +81,10 @@ module.exports = function (response, callback) {
     });
 
 
-
     // parse the time and actions remaining
     if (actions) {
         data.actionsRemaining = parseInt(actions.text());
+        data.healthPerAction = data.healthRemaining / data.actionsRemaining;
     }
 
     if (timeLeft) {
