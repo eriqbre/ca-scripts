@@ -36,7 +36,7 @@ module.exports = function (options, callback) {
                             remainingTokens += toon.data.tokens;
                     });
 
-                    console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
+                    console.log('ar: ' + tower.actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + tower.healthPerAction);
 					task.data.push({
 						toon: (attacker.name || ''),
 						actionsRemaining: actionsRemaining,
