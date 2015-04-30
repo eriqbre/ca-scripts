@@ -11,7 +11,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
 	mongoStore = require('connect-mongo')(session),
     morgan = require('morgan'),
-	rollbar = require('rollbar'),
+//rollbar = require('rollbar'),
     db = require('./config/db');
 
 mongoose.connect(db.url);
@@ -51,9 +51,7 @@ app.use(function (request, response, next) {
     }
 });
 
-rollbar.handleUncaughtExceptions('948d2b80d7b542d09891c9e0a984fda3', {
-
-});
+//rollbar.handleUncaughtExceptions('948d2b80d7b542d09891c9e0a984fda3', { });
 // set up api endpoints
 require('./api/api.routes')(app);
 
