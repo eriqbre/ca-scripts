@@ -32,6 +32,7 @@ module.exports = function (options, callback) {
                         healthPerAction: data.healthPerAction,
                         healthRemaining: data.healthRemaining,
                         timeRemaining: data.timeRemaining,
+                        totalHealth: data.totalHealth,
                         toons: data.toons
                     });
 
@@ -44,7 +45,7 @@ module.exports = function (options, callback) {
                             remainingTokens += toon.data.tokens;
                     });
 
-                    console.log('ar: ' + tower.actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.healthRemaining + ' / health/action ' + tower.healthPerAction.toFixed(2));
+                    console.log('ar: ' + tower.actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.healthRemaining + ' /totalhealth ' + tower.totalHealth + ': ' + ((tower.healthRemaining / tower.totalHealth) * 100) + '% / health/action ' + tower.healthPerAction.toFixed(2));
                     task.data.push({
                         toon: (attacker.name || ''),
                         actionsRemaining: tower.actionsRemaining,
@@ -52,9 +53,6 @@ module.exports = function (options, callback) {
                         healthPerAction: tower.healthPerAction
                     });
 
-                    // re-sort the towers
-                    options.tower = tower;
-                    options = lomTowerSort(options);
 
                     // define a window of action
                     // actionsRemaining should be above the floor and below the ceiling
@@ -65,6 +63,10 @@ module.exports = function (options, callback) {
                         tower.healthPerAction < lomConfigs.healthPerActionTarget &&
                         (tower.totalHealth * (lomConfigs.healthPercentage / 100)) > tower.healthRemaining &&
                         remainingTokens > 0) {
+
+                        // re-sort the towers
+                        options.towersInDefense[0] = tower;
+                        options = lomTowerSort(options);
                         --tower.actionsRemaining;
                         attack(options, callback);
                     }
@@ -205,7 +207,7 @@ module.exports = function (options, callback) {
         }
     ], function (error, data) {
         if (callback) {
-            callback(error, data);
+            callback(data);
         }
     });
 };

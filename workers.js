@@ -12,7 +12,7 @@ var app = require('./app'),
     maintenance = require('./services/maintenance');
 
 app.listen(cronfigs.port, function () {
-    console.log('cron jobs');
+    console.log('registering cron jobs');
 
     // cron for changing loadouts
     cronfigs.loadouts.times.map(function (cronfig) {
