@@ -29,10 +29,7 @@ app.use(session({
     key: 'sid',
     resave: false,
     saveUninitialized: true,
-	store: new mongoStore({
-		mongooseConnection: mongoose.connection,
-		ttl: 1 * 24 * 60 * 60
-	})
+    cookie: {secure: false, maxAge: 360 * 5}
 }));
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(express.static(__dirname + '/public'));

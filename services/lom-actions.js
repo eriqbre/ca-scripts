@@ -5,12 +5,12 @@
 var async = require('async'),
     login = require('../requests/sequences/login-sequence'),
     changeLoadout = require('../requests/loadouts'),
-	lomConfigs = require('../config/lom-actions'),
+    lomConfigs = require('../config/lom-actions'),
     lomAttack = require('../requests/lom-attack'),
     landOfMistTower = require('../requests/lom-tower'),
-	lomTowerSort = require('./sort-lom-defense-towers'),
+    lomTowerSort = require('./sort-lom-defense-towers'),
     Task = require('../models/task'),
-    _ = require('lodash');
+    _ = require('underscore');
 
 module.exports = function (options, callback) {
     var _this = this, task = new Task({name: 'lom-actions', type: 'defend-lom', data: []}),
@@ -23,12 +23,19 @@ module.exports = function (options, callback) {
                 } else {
                     var remainingTokens = 0,
                         tower = (options.tower || options.towersInDefense[0]),
-	                    attacker = _.filter(options.toons, function (toon) {
-		                    return toon.caId === data.attacker;
-	                    })[0];
+                        attacker = _.filter(options.toons, function (toon) {
+                            return toon.caId === data.attacker;
+                        })[0];
+
+                    tower.actionsRemaining = data.actionsRemaining;
+                    tower.timeRemaining = data.timeRemaining;
+                    tower.toons = data.toons;
+
+                    // after every attack, check remaining actions
+                    actionsRemaining = data.actionsRemaining;
 
                     // update remaining tokens for the current attacker
-	                attacker.data.tokens = data.tokens;
+                    attacker.data.tokens = data.tokens;
 
                     // update remaining tokens
                     _.each(options.toons, function (toon) {
@@ -36,29 +43,26 @@ module.exports = function (options, callback) {
                             remainingTokens += toon.data.tokens;
                     });
 
-                    console.log('ar: ' + tower.actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + tower.healthPerAction);
-					task.data.push({
-						toon: (attacker.name || ''),
-						actionsRemaining: actionsRemaining,
-						totalHealth: tower.totalHealth,
-						healthPerAction: tower.healthPerAction
-					});
+                    tower.totalHealth = 0;
+                    _.each(tower.toons, function (toon) {
+                        tower.totalHealth += toon.health;
+                    });
 
-	                // re-sort the towers
-                    options.tower = tower;
-	                options = lomTowerSort(options);
+                    console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
+                    task.data.push({
+                        toon: (attacker.name || ''),
+                        actionsRemaining: actionsRemaining,
+                        totalHealth: tower.totalHealth,
+                        healthPerAction: tower.healthPerAction
+                    });
 
-	                // define a window of action
-	                // actionsRemaining should be above the floor and below the ceiling
-	                // healthPerAction should be less than the max
-	                // healthRemaining should be less than the max % of totalHealth
-                    if (tower.actionsRemaining > lomConfigs.floor &&
-                        tower.actionsRemaining < lomConfigs.ceiling &&
-	                    tower.healthPerAction < lomConfigs.healthPerActionTarget &&
-	                    (tower.totalHealth * (lomConfigs.healthPercentage/100)) > tower.healthRemaining &&
-	                    remainingTokens > 0) {
-                            --actionsRemaining;
-                            attack(options, callback);
+                    // re-sort the towers
+                    options = lomTowerSort(options);
+
+                    // don't use all actions!
+                    if ((actionsRemaining > lomConfigs.floor || tower.healthPerAction > lomConfigs.healthPerActionTarget) && remainingTokens > 0) {
+                        --actionsRemaining;
+                        attack(options, callback);
                     }
                     // once remaining actions hits a predetermined number, break out and end
                     else {
@@ -69,7 +73,7 @@ module.exports = function (options, callback) {
         },
         formAttack = function (options) {
             // if no tower is present, end it
-            if (!(options.tower || (options.towersInDefense || [])[0])) {
+            if (!(options.tower || options.towersInDefense[0])) {
                 return {};
             }
 
@@ -168,7 +172,11 @@ module.exports = function (options, callback) {
                 landOfMistTower({id: options.id, jar: options.toons[0].jar}, function (error, data) {
                     if (error) callback(error, null);
 
-                    options.tower = data;
+                    options.tower = {
+                        toons: data.toons,
+                        actionsRemaining: data.actionsRemaining,
+                        timeRemaining: data.timeRemaining
+                    };
 
                     callback(null, options);
                 });
@@ -182,8 +190,11 @@ module.exports = function (options, callback) {
         // attack the tower
         function (options, callback) {
             attack(options, function (error, data) {
-                callback(error, data);
-            })
+                // save task in mongo
+                task.save(function(error){
+                    callback(null, options);
+                });
+            });
         }
     ], function (error, data) {
         if (callback) {
