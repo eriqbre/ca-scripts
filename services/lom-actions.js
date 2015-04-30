@@ -27,12 +27,13 @@ module.exports = function (options, callback) {
                             return toon.caId === data.attacker;
                         })[0];
 
-                    tower.actionsRemaining = data.actionsRemaining;
-                    tower.timeRemaining = data.timeRemaining;
-                    tower.toons = data.toons;
-
-                    // after every attack, check remaining actions
-                    actionsRemaining = data.actionsRemaining;
+                    _.extend(tower, {
+                        actionsRemaining: data.actionsRemaining,
+                        healthPerAction: data.healthPerAction,
+                        healthRemaining: data.healthRemaining,
+                        timeRemaining: data.timeRemaining,
+                        toons: data.toons
+                    });
 
                     // update remaining tokens for the current attacker
                     attacker.data.tokens = data.tokens;
@@ -43,25 +44,28 @@ module.exports = function (options, callback) {
                             remainingTokens += toon.data.tokens;
                     });
 
-                    tower.totalHealth = 0;
-                    _.each(tower.toons, function (toon) {
-                        tower.totalHealth += toon.health;
-                    });
-
-                    console.log('ar: ' + actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.totalHealth + ' / health/action ' + (tower.healthPerAction || tower.totalHealth / actionsRemaining));
+                    console.log('ar: ' + tower.actionsRemaining + '/ tr: ' + remainingTokens + ' / th: ' + tower.healthRemaining + ' / health/action ' + tower.healthPerAction.toFixed(2));
                     task.data.push({
                         toon: (attacker.name || ''),
-                        actionsRemaining: actionsRemaining,
+                        actionsRemaining: tower.actionsRemaining,
                         totalHealth: tower.totalHealth,
                         healthPerAction: tower.healthPerAction
                     });
 
                     // re-sort the towers
+                    options.tower = tower;
                     options = lomTowerSort(options);
 
-                    // don't use all actions!
-                    if ((actionsRemaining > lomConfigs.floor || tower.healthPerAction > lomConfigs.healthPerActionTarget) && remainingTokens > 0) {
-                        --actionsRemaining;
+                    // define a window of action
+                    // actionsRemaining should be above the floor and below the ceiling
+                    // healthPerAction should be less than the max
+                    // healthRemaining should be less than the max % of totalHealth
+                    if (tower.actionsRemaining > lomConfigs.floor &&
+                        tower.actionsRemaining < lomConfigs.ceiling &&
+                        tower.healthPerAction < lomConfigs.healthPerActionTarget &&
+                        (tower.totalHealth * (lomConfigs.healthPercentage / 100)) > tower.healthRemaining &&
+                        remainingTokens > 0) {
+                        --tower.actionsRemaining;
                         attack(options, callback);
                     }
                     // once remaining actions hits a predetermined number, break out and end
@@ -73,7 +77,7 @@ module.exports = function (options, callback) {
         },
         formAttack = function (options) {
             // if no tower is present, end it
-            if (!(options.tower || options.towersInDefense[0])) {
+            if (!(options.tower || (options.towersInDefense || [])[0])) {
                 return {};
             }
 
@@ -175,7 +179,10 @@ module.exports = function (options, callback) {
                     options.tower = {
                         toons: data.toons,
                         actionsRemaining: data.actionsRemaining,
-                        timeRemaining: data.timeRemaining
+                        healthPerAction: data.healthPerAction,
+                        healthRemaining: data.healthRemaining,
+                        timeRemaining: data.timeRemaining,
+                        totalHealth: data.totalHealth
                     };
 
                     callback(null, options);

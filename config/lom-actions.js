@@ -5,6 +5,6 @@
 module.exports = {
 	healthPerActionTarget: 3000,
 	ceiling: 950,
-	floor: 200,
-	healthPercentage: 90
+	floor: 100,
+	healthPercentage: 95
 };
