@@ -12,7 +12,7 @@ var async = require('async'),
     _ = require('lodash');
 
 module.exports = function (options, callback) {
-    var task = new Task({name: role, type: role, data: []}),
+    var task = new Task({name: 'battle-actions', type: options.role, data: []}),
         trigger = function (options, callback) {
             battle.action(options, function (error, data) {
                 // success is defined as the action being triggered, regardless of the success or failure of the action
@@ -33,7 +33,7 @@ module.exports = function (options, callback) {
                 callback(null, _.extend(options, {toons: data.toons}));
             });
         },
-        // hit the home page and grab the guildId
+        // hit the battle home page and grab the enter information
         function (options, callback) {
             async.mapSeries(options.toons[0], function (toon, callback) {
                 home({jar: toon.jar}, function (error, data) {
