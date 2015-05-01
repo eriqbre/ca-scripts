@@ -37,11 +37,10 @@ module.exports = function (options, callback) {
         // hit the battle home page and grab the enter information (this is the page with the big red Join Battle button)
         function (options, callback) {
             async.mapSeries(options.toons, function (toon, callback) {
-                battle.home({jar: toon.jar}, function (error, data) {
+	            battle.home({jar: toon.jar, toon: toon, role: options.role}, function (error, data) {
                     // update options with data from the main call, this will tell us how to get into the battle
-                    callback(null, _.extend(options, {
-                        defender_guild_id: data.defender_guild_id
-                    }));
+		            toon.battle = data;
+		            callback(null, options);
                 });
             }, function (error, data) {
                 callback(null, options);
@@ -50,7 +49,7 @@ module.exports = function (options, callback) {
         // enter the battle page
         function (options, callback) {
             async.mapSeries(options.toons, function (toon, callback) {
-                battle.tower({jar: toon.jar, defender_guild_id: options.defender_guild_id}, function (error, data) {
+	            battle.tower({jar: toon.jar, toon: toon}, function (error, data) {
                     // todo: update toons with data from the main call, including present battle stats and data about the first tower
                     callback(null, _.extend(options, {battle: data}));
                 });

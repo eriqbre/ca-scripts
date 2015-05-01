@@ -5,7 +5,7 @@
 var tvtAction = require('../requests/10v10-action'),
     tvtEnter = require('../requests/10v10-enter'),
     tvtTower = require('../requests/10v10-tower'),
-    tvtHome = require('../requests/10v10-tower'),
+	tvtHome = require('../requests/10v10-home'),
     hvhAction = require('../requests/100v100-action'),
     hvhEnter = require('../requests/100v100-enter'),
     hvhHome = require('../requests/100v100-enter'),

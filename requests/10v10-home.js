@@ -9,7 +9,7 @@ var parser = require('../parsers/10v10-home'),
 	form = require('../config/forms/10v10-home');
 
 module.exports = function (options, callback) {
-	options.url = routes.index;
+	options.url = routes.tvtHome;
 	options.form = form(options);
 
 	request(options, function (error, response) {

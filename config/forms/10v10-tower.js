@@ -4,7 +4,8 @@
 
 module.exports = function (options) {
     var form = {
-        battle_id: options.id
+	    ajax: '1',
+	    battle_id: options.toon.battle.battle_id
     };
 
     if (options.allies) {

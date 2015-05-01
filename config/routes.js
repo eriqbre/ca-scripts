@@ -24,5 +24,6 @@ module.exports = {
     },
     login: base + 'connect_login.php',
     oracle: base + 'symbols.php',
-    tvt: base + 'ten_battle.php'
+	tvt: base + 'ten_battle.php',
+	tvtHome: base + 'tenxten_gb_formation.php'
 };

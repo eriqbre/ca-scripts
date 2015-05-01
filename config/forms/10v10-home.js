@@ -4,5 +4,6 @@
 
 module.exports = function (options) {
 	return {
+		ajax: '1'
 	}
 };
