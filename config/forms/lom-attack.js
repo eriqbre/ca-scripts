@@ -7,14 +7,12 @@ var _ = require('lodash');
 module.exports = function (data) {
     var result = {
 		    'attack_type': 'normal',
-            'is_attacker': '1',
-            'target_id': '1259347008'
+            'is_attacker': '1'
         },
         ignore = [
             'attacking_position',
             'is_attacker',
-	        'attack_type',
-            'target_id'
+            'attack_type'
         ];
 
     _.each(data.inputs, function (input) {

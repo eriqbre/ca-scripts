@@ -4,7 +4,7 @@
  */
 
 var async = require('async'),
-    battle = require('../helpers/battle-actions-setup'),
+    battleSetup = require('../helpers/battle-actions-setup'),
     loadout = require('../requests/loadouts'),
     login = require('../requests/sequences/login-sequence'),
     Task = require('../models/task'),
@@ -13,6 +13,7 @@ var async = require('async'),
 
 module.exports = function (options, callback) {
     var task = new Task({name: 'battle-actions', type: options.role, data: []}),
+        battle = battleSetup(options),
         trigger = function (options, callback) {
             battle.action(options, function (error, data) {
                 // success is defined as the action being triggered, regardless of the success or failure of the action
@@ -33,22 +34,36 @@ module.exports = function (options, callback) {
                 callback(null, _.extend(options, {toons: data.toons}));
             });
         },
-        // hit the battle home page and grab the enter information
+        // hit the battle home page and grab the enter information (this is the page with the big red Join Battle button)
         function (options, callback) {
-            async.mapSeries(options.toons[0], function (toon, callback) {
-                home({jar: toon.jar}, function (error, data) {
-                    // update toons with data from the main call
-                    callback(null, _.extend(options, {defender_guild_id: data.defender_guild_id}));
+            async.mapSeries(options.toons, function (toon, callback) {
+                battle.home({jar: toon.jar}, function (error, data) {
+                    // update options with data from the main call, this will tell us how to get into the battle
+                    callback(null, _.extend(options, {
+                        defender_guild_id: data.defender_guild_id
+                    }));
                 });
             }, function (error, data) {
                 callback(null, options);
             });
         },
-        // enter the fbb page and click to enter battle if they haven't already
+        // enter the battle page
         function (options, callback) {
             async.mapSeries(options.toons, function (toon, callback) {
+                battle.tower({jar: toon.jar, defender_guild_id: options.defender_guild_id}, function (error, data) {
+                    // todo: update toons with data from the main call, including present battle stats and data about the first tower
+                    callback(null, _.extend(options, {battle: data}));
+                });
+            }, function (error, data) {
+                callback(null, options);
+            });
+        },
+        // if needed, click to enter battle
+        function (options, callback) {
+            async.mapSeries(_.filter(options.toons, function (toon) {
+                return !toon.data.isInBattle;
+            }), function (toon, callback) {
                 battle.enter({jar: toon.jar, defender_guild_id: options.defender_guild_id}, function (error, data) {
-                    // todo: update toons with data from the main call
                     callback(null, _.extend(options, {battle: data}));
                 });
             }, function (error, data) {
@@ -64,9 +79,8 @@ module.exports = function (options, callback) {
                 })
             }), function (tower, callback) {
                 // todo: create options object for calling individual towers
-                battle.tower({tower: tower}, function (error, data) {
-                    // todo: update options with data from each tower
-                    callback(null, _.extend(options, {}));
+                battle.tower({jar: options.toons[0].jar, tower: tower}, function (error, data) {
+                    callback(null, _.extend(tower, data));
                 });
             }, function (error, data) {
                 // all towers updated

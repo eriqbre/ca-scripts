@@ -2,13 +2,12 @@
  * Created by ebreland on 4/27/2015.
  */
 
-var cheerio = require('cheerio');
+var cheerio = require('cheerio'),
+	battleData = require('../config/battle-data');
 
 module.exports = function(response){
 	var $ = cheerio.load(response.body),
-		data = {
-            hasEntered: $('input[name="enter_battle"]').length ? true:false
-		};
+		data = battleData;
 
     if (data.hasEntered){
         // parse tokens and timeToNextToken

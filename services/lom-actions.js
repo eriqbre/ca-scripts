@@ -65,8 +65,10 @@ module.exports = function (options, callback) {
                         remainingTokens > 0) {
 
                         // re-sort the towers
-                        options.towersInDefense[0] = tower;
-                        options = lomTowerSort(options);
+                        if (options.towersInDefense) {
+                            //options.towersInDefense[0] = tower;
+                        }
+                        //options = lomTowerSort(options);
                         --tower.actionsRemaining;
                         attack(options, callback);
                     }
