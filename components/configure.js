@@ -5,13 +5,7 @@
 
 var request = require('../requests/base'),
     routes = require('../config/routes'),
-    _ = require('lodash'),
-
-    fbbAction = require('./fbb/requests/action'),
-    fbbEnter = require('./fbb/requests/enter'),
-    fbbHome = require('./fbb/requests/home'),
-    fbbJoin = require('./fbb/requests/join'),
-    fbbTower = require('./fbb/requests/tower');
+    _ = require('lodash');
 
 module.exports = function (options) {
     switch (options.role) {
