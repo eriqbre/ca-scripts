@@ -10,13 +10,19 @@
  * todo: i'll need to account for time remaining also
  */
 
-var lomActions = require('../config/lom-actions'),
+var lomActions = require('../config/lom-actions');
+config = require('../config/lom-actions'),
 	_ = require('lodash');
 
 module.exports = function(options){
 	// filter out towers that are "safe"
+	// if a towers remaining actions are > than the floor and < than the ceiling
+	// and the health/action
 	options.towersInDefense = _.filter(options.towersInDefense, function(tower){
-		return tower.actionsRemaining > lomActions.floor;
+		return (tower.actionsRemaining > config().floor &&
+		tower.actionsRemaining < config().ceiling &&
+		tower.healthPerAction > config().healthPerActionTarget &&
+		tower.totalHealth * (config().healthPercentage / 100) > tower.healthRemaining);
 	});
 
 	// get total health of each tower

@@ -28,8 +28,6 @@ module.exports = function (app) {
 
 	// process routes
 	require('./processes/create-bot')(app);
-    require('./processes/10v10-actions')(app);
-    require('./processes/100v100-actions')(app);
     require('./processes/battle-actions')(app);
     require('./processes/loadouts')(app);
     require('./processes/lom-check')(app);

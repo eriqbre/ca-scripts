@@ -40,7 +40,13 @@ module.exports = function (options, callback) {
             timeout: 5000,
             url: url
         }, function (error, response) {
-            callback(error, response);
+            if (options.parser) {
+                options.parser(options, response, function (error, data) {
+                    callback(error, data);
+                });
+            } else {
+                callback(error, response);
+            }
         })
             .on('response', function (response) {
                 // add global data to the response

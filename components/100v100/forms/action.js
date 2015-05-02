@@ -2,7 +2,7 @@
  * Created by ebreland on 4/26/15.
  */
 
-var guild = require('../guild');
+var guild = require('../../../config/guild');
 
 module.exports = function (options) {
     var form = {

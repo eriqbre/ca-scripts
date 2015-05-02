@@ -3,6 +3,8 @@
  */
 
 module.exports = function (options) {
-	return {
-	}
+    return {
+        ajax: '1',
+        battle_id: options.id
+    }
 };

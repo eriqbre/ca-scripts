@@ -4,11 +4,10 @@
  */
 
 var async = require('async'),
-    battleSetup = require('../helpers/battle-actions-setup'),
+    battleSetup = require('../components/configure'),
     loadout = require('../requests/loadouts'),
     login = require('../requests/sequences/login-sequence'),
     Task = require('../models/task'),
-    towers = require('../config/towers'),
     _ = require('lodash');
 
 module.exports = function (options, callback) {
@@ -37,7 +36,7 @@ module.exports = function (options, callback) {
         // hit the battle home page and grab the enter information (this is the page with the big red Join Battle button)
         function (options, callback) {
             async.mapSeries(options.toons, function (toon, callback) {
-	            battle.home({jar: toon.jar, toon: toon, role: options.role}, function (error, data) {
+                battle.home({jar: toon.jar}, function (error, data) {
                     // update options with data from the main call, this will tell us how to get into the battle
 		            toon.battle = data;
 		            callback(null, options);
@@ -49,9 +48,8 @@ module.exports = function (options, callback) {
         // enter the battle page
         function (options, callback) {
             async.mapSeries(options.toons, function (toon, callback) {
-                battle.enter({jar: toon.jar, toon: toon}, function (error, data) {
-                    // todo: update toons with data from the main call, including present battle stats and data about the first tower
-                    callback(null, _.extend(options, {battle: data}));
+                battle.enter({jar: toon.jar, id: toon.battle.id, battle: toon.battle}, function (error, data) {
+                    callback(null, _.extend(toon.battle, data));
                 });
             }, function (error, data) {
                 callback(null, options);
@@ -62,8 +60,8 @@ module.exports = function (options, callback) {
             async.mapSeries(_.filter(options.toons, function (toon) {
                 return !toon.data.isInBattle;
             }), function (toon, callback) {
-                battle.enter({jar: toon.jar, defender_guild_id: options.defender_guild_id}, function (error, data) {
-                    callback(null, _.extend(options, {battle: data}));
+                battle.join({jar: toon.jar, battle: toon.battle}, function (error, data) {
+                    callback(null, _.extend(toon, {battle: data}));
                 });
             }, function (error, data) {
                 callback(null, options);
@@ -71,19 +69,20 @@ module.exports = function (options, callback) {
         },
         // get tower data for both sides
         function (options, callback) {
-            // get data for all opponent and all allied towers
-            async.map(_.select(towers, function (tower) {
-                return _.extend(tower, {
-                    defender_guild_id: options.defender_guild_id
-                })
-            }), function (tower, callback) {
-                // todo: create options object for calling individual towers
-                battle.tower({jar: options.toons[0].jar, tower: tower}, function (error, data) {
-                    callback(null, _.extend(tower, data));
+            async.mapSeries(options.toons, function (toon, callback) {
+                async.mapSeries(toon.battle.towers, function (tower, callback) {
+                    battle.tower({jar: toon.jar, tower: tower, battle: toon.battle}, function (error, data) {
+                        // add tower data to the toon
+                        callback(error, _.extend(toon, {battle: data}));
+                    });
+                }, function (error, data) {
+                    // all tower data compiled
+                    callback(error, options);
                 });
+
             }, function (error, data) {
-                // all towers updated
-                callback(null, options);
+                // tower data compiled for all toons
+                callback(error, options);
             });
         },
         // execute actions

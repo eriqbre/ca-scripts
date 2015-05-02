@@ -3,7 +3,7 @@
  */
 
 var cheerio = require('cheerio'),
-    battleData = require('../config/battle-data');
+    battleData = require('../../../config/battle-data');
 
 module.exports = function (options, response, callback) {
     var $ = cheerio.load(response),

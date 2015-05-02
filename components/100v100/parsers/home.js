@@ -7,7 +7,7 @@ var cheerio = require('cheerio');
 module.exports = function (options, response, callback) {
     var $ = cheerio.load(response.body);
     data = {
-        //battle_id: $(identifier).attr('value')
+        id: $('input[name="battle_id"]').val()
     };
 
     callback(null, data);

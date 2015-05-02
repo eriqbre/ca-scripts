@@ -2,18 +2,21 @@
  * Created by ebreland on 4/28/15.
  */
 
-var tvtAction = require('../requests/10v10-action'),
-    tvtEnter = require('../requests/10v10-enter'),
-    tvtTower = require('../requests/10v10-tower'),
-	tvtHome = require('../requests/10v10-home'),
-    hvhAction = require('../requests/100v100-action'),
-    hvhEnter = require('../requests/100v100-enter'),
-    hvhHome = require('../requests/100v100-home'),
-    hvhTower = require('../requests/100v100-tower'),
-    fbbAction = require('../requests/fbb-action'),
-    fbbEnter = require('../requests/fbb-enter'),
-    fbbHome = require('../requests/fbb-home'),
-    fbbTower = require('../requests/fbb-tower');
+var tvtAction = require('../components/10v10/requests/action'),
+    tvtEnter = require('../components/10v10/requests/enter'),
+    tvtHome = require('../components/10v10/requests/home'),
+    tvtJoin = require('../components/10v10/requests/join'),
+    tvtTower = require('../components/10v10/requests/tower'),
+    hvhAction = require('../components/100v100/requests/action'),
+    hvhEnter = require('../components/100v100/requests/enter'),
+    hvhHome = require('../components/100v100/requests/home'),
+    hvhJoin = require('../requests/100v100-join'),
+    hvhTower = require('../components/100v100/requests/tower'),
+    fbbAction = require('../components/fbb/requests/action'),
+    fbbEnter = require('../components/fbb/requests/enter'),
+    fbbHome = require('../components/fbb/requests/home'),
+    fbbJoin = require('../requests/fbb-join'),
+    fbbTower = require('../components/fbb/requests/tower');
 
 module.exports = function (options) {
     switch (options.role) {
