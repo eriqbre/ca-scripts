@@ -9,7 +9,7 @@ var parser = require('../parsers/fbb-battle'),
 	form = require('../config/forms/fbb-enter');
 
 module.exports = function (options, callback) {
-	options.url = routes.battle;
+	options.url = routes.fbbEnter;
 	options.form = form(options);
 
 	request(options, function (error, response) {

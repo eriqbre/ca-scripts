@@ -49,7 +49,7 @@ module.exports = function (options, callback) {
         // enter the battle page
         function (options, callback) {
             async.mapSeries(options.toons, function (toon, callback) {
-	            battle.tower({jar: toon.jar, toon: toon}, function (error, data) {
+                battle.enter({jar: toon.jar, toon: toon}, function (error, data) {
                     // todo: update toons with data from the main call, including present battle stats and data about the first tower
                     callback(null, _.extend(options, {battle: data}));
                 });

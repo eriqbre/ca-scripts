@@ -11,7 +11,7 @@ module.exports = function (options, callback) {
 	options.url = routes.fbbHome;
 
 	request(options, function (error, response) {
-		parser(options, response, function (error, data) {
+		parser(response, function (error, data) {
 			callback(error, data);
 		});
 	});

@@ -6,11 +6,11 @@ var guild = require('../guild');
 
 module.exports = function(options){
 	var form = {
-		action: 'enter_battle',
+		//action: 'enter_battle',
 		ajax: '1',
-		attacker_guild: guild.id,
-		battle_type: '2000',
-		defender_guild_id: options.defender_guild_id
+		attacker_guild: options.toon.battle.attacker_guild_id,
+		battle_type: options.toon.battle.battle_type,
+		defender_guild_id: options.toon.battle.defender_guild_id
 	};
 
 	return form;

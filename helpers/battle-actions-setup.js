@@ -8,11 +8,11 @@ var tvtAction = require('../requests/10v10-action'),
 	tvtHome = require('../requests/10v10-home'),
     hvhAction = require('../requests/100v100-action'),
     hvhEnter = require('../requests/100v100-enter'),
-    hvhHome = require('../requests/100v100-enter'),
+    hvhHome = require('../requests/100v100-home'),
     hvhTower = require('../requests/100v100-tower'),
     fbbAction = require('../requests/fbb-action'),
     fbbEnter = require('../requests/fbb-enter'),
-    fbbHome = require('../requests/fbb-enter'),
+    fbbHome = require('../requests/fbb-home'),
     fbbTower = require('../requests/fbb-tower');
 
 module.exports = function (options) {
