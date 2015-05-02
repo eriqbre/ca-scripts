@@ -58,10 +58,10 @@ module.exports = function (options, callback) {
                     // actionsRemaining should be above the floor and below the ceiling
                     // healthPerAction should be less than the max
                     // healthRemaining should be less than the max % of totalHealth
-	                if (tower.actionsRemaining > lomConfigs(options).floor &&
-		                tower.actionsRemaining < lomConfigs(options).ceiling &&
-		                tower.healthPerAction < lomConfigs(options).healthPerActionTarget &&
-		                (tower.totalHealth * (lomConfigs(options).healthPercentage / 100)) > tower.healthRemaining &&
+	                if (tower.actionsRemaining > lomConfigs.floor &&
+		                tower.actionsRemaining < lomConfigs.ceiling &&
+		                tower.healthPerAction < lomConfigs.healthPerActionTarget &&
+		                (tower.totalHealth * (lomConfigs.healthPercentage / 100)) > tower.healthRemaining &&
                         remainingTokens > 0) {
 
                         // re-sort the towers

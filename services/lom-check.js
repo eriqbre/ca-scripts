@@ -36,11 +36,7 @@ module.exports = function (callback) {
 			if (options.towersInDefense.length > 0 && options.toons.length > 0) {
 			    async.map(options.towersInDefense, function(tower, callback){
 					lomTower({id: tower.slot, jar: options.toons[0].jar}, function (error, data) {
-					    _.extend(tower, {
-						    toons: data.toons,
-						    actionsRemaining: data.actionsRemaining,
-						    timeRemaining: data.timeRemaining
-					    });
+					    _.extend(tower, data);
 
 					    callback(null, options);
 				    });

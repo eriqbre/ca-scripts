@@ -7,7 +7,7 @@ var cheerio = require('cheerio'),
 
 module.exports = function (response, callback) {
     var $ = cheerio.load(response.body),
-        data = response.data,
+        data = {},
         forms = [],
         date = new Date(),
         actions = $("div:contains('ACTIONS LEFT:')").last().find('span'),

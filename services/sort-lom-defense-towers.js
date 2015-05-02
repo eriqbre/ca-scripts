@@ -21,16 +21,8 @@ module.exports = function(options){
 	options.towersInDefense = _.filter(options.towersInDefense, function(tower){
 		return (tower.actionsRemaining > config(options).floor &&
 		tower.actionsRemaining < config(options).ceiling &&
-		tower.healthPerAction > config(options).healthPerActionTarget &&
+		tower.healthPerAction < config(options).healthPerActionTarget &&
 		tower.totalHealth * (config(options).healthPercentage / 100) > tower.healthRemaining);
-	});
-
-	// get total health of each tower
-	_.each(options.towersInDefense, function(tower){
-		tower.totalHealth = 0;
-		_.each(tower.toons, function(toon){
-			tower.totalHealth += toon.health;
-		});
 	});
 
 	// prioritize lands
