@@ -5,7 +5,6 @@
 var async = require('async'),
     login = require('../requests/sequences/login-sequence'),
     changeLoadout = require('../requests/loadouts'),
-    lomConfigs = require('../config/lom-actions'),
     lomAttack = require('../requests/lom-attack'),
     landOfMistTower = require('../requests/lom-tower'),
     lomTowerSort = require('./sort-lom-defense-towers'),
@@ -14,6 +13,7 @@ var async = require('async'),
 
 module.exports = function (options, callback) {
     var _this = this, task = new Task({name: 'lom-actions', type: 'defend-lom', data: []}),
+        lomConfigs = require('../config/lom-actions')(options),
         actionsRemaining = 1000,
         role = 'lom-actions',
         attack = function (options, callback) {
