@@ -30,8 +30,8 @@ module.exports = {
         ]
     },
     lomActions: {
-        //time: "0,10,20,30,40,50 * * * *"
-        time: "0 * * * * *"
+        time: "0,10,20,30,40,50 * * * *"
+        //time: "0 * * * * *"
     },
     maintenance: {
         time: "0,20,40 * * * *",
