@@ -76,10 +76,15 @@ module.exports = function (options, callback) {
         // get tower data for both sides
         function (options, callback) {
             async.map(options.toons, function (toon, callback) {
-                async.map(toon.battle.towers, function (tower, callback) {
+                async.mapSeries(toon.battle.towers, function (tower, callback) {
                     battle.tower({jar: toon.jar, tower: tower, battle: toon.battle}, function (error, data) {
-                        // add tower data to the toon
-                        callback(error, _.extend(toon, {battle: data}));
+                        // add tower data to the toon only if it doesn't already exist
+                        if (!_.find(toon.battle[data.meta.side].towers, function (tower) {
+                                return tower.name = data[data.meta.side].towers[0].name;
+                            })) {
+                            toon.battle[data.meta.side].towers.push(data[data.meta.side].towers[0]);
+                        }
+                        callback(error, toon);
                     });
                 }, function (error, data) {
                     // all tower data compiled
@@ -116,7 +121,26 @@ module.exports = function (options, callback) {
                         // trigger the defined action
                         function (toon, callback) {
                             // todo: trigger recursive actions to counter tripping
-                            trigger({ action: action, toon: toon, jar: toon.jar }, function (error, data) {
+                            // combine all the towers into one array
+                            var targeted;
+                            _.each(toon.battle.attacker.towers, function (tower) {
+                                _.each(tower.toons, function (target) {
+                                    if (target.form.inputs.length > 0) {
+                                        _.each(target.form.inputs, function (input) {
+                                            if (input.name === 'target_id' && input.value === action.target) {
+                                                targeted = target;
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                            // search the array for the desired target
+                            trigger({
+                                action: action,
+                                toon: toon,
+                                jar: toon.jar,
+                                form: _.extend(targeted.form, action.inputs)
+                            }, function (error, data) {
                                 callback(null, _.extend(toon, {}));
                             });
                         }

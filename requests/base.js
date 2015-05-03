@@ -40,13 +40,15 @@ module.exports = function (options, callback) {
             timeout: options.timeout || 5000,
             url: url
         }, function (error, response) {
-            if (!error && options.parser) {
-                options.parser(options, response, function (error, data) {
-                    callback(error, data);
-                });
-            } else {
-                callback(error, response);
-            }
+            process.nextTick(function () {
+                if (!error && options.parser) {
+                    options.parser(options, response, function (error, data) {
+                        callback(error, data);
+                    });
+                } else {
+                    callback(error, response);
+                }
+            });
         })
             .on('response', function (response) {
                 // add global data to the response
@@ -60,7 +62,7 @@ module.exports = function (options, callback) {
                 });
             })
             .on('error', function (error) {
-		        if (error.code !== 'ETIMEDOUT'){
+                if (error.code !== 'ETIMEDOUT' && error.code !== 'ESOCKETTIMEDOUT') {
 			        console.log(error);
 		        }
             })

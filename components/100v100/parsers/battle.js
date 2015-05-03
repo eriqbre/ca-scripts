@@ -3,31 +3,48 @@
  */
 
 var cheerio = require('cheerio'),
-	config = require('../config');
+	config = require('../config'),
+	toonParser = require('../../../parsers/tower-toons'),
+	_ = require('lodash');
 
 module.exports = function (options, response, callback) {
-	var $ = cheerio.load(response.body),
-		battleData = require('../../../config/battle-data')(options),
-		data = battleData.tower,
-		attackerGuildId = $('input[name="attacker_guild_id"]'),
-		defenderGuildId = $('input[name="defender_guild_id"]'),
-	    enterBattleInput = $('input[name="action"][value="enter_battle"]');
+	var $ = cheerio.load(response.body);
 
-	if (attackerGuildId) {
-		data.attacker.id = attackerGuildId.val();
-	}
+	process.nextTick(function () {
+		var battleData = _.clone(require('../../../config/battle-data')(options), true),
+			data = battleData.castle,
+			attackerGuildId = $('input[name="attacker_guild_id"]'),
+			defenderGuildId = $('input[name="defender_guild_id"]'),
+			enterBattleInput = $('input[name="action"][value="enter_battle"]'),
+			containers = $('.guild_battle_container'),
+			side = options.form.view_allies ? 'attacker' : 'defender',
+			towerNumber = options.form.sel_pos || '1';
 
-	if (defenderGuildId) {
-		data.defender.id = defenderGuildId.val();
-	}
+		if (attackerGuildId) {
+			data.attacker.id = attackerGuildId.val();
+		}
 
-	data.isInBattle = enterBattleInput.length === 0;
+		if (defenderGuildId) {
+			data.defender.id = defenderGuildId.val();
+		}
 
-	if (options.form && options.form.battle_id) {
-		data.id = options.form.battle_id;
-	}
+		data.isInBattle = enterBattleInput.length === 0;
 
-	data.towers = config.towers;
+		if (options.form && options.form.battle_id) {
+			data.id = options.form.battle_id;
+		}
 
-	callback(null, data);
+		data.meta = {
+			side: side,
+			tower: side === 'attacker' ? 'h' : 't' + towerNumber
+		};
+
+		toonParser(options, $(containers), function (error, toons) {
+			data[data.meta.side].towers.push(battleData.tower({name: data.meta.tower, toons: toons}));
+		});
+
+		data.towers = config.towers;
+
+		callback(null, data);
+	});
 };

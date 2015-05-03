@@ -5,13 +5,13 @@
 var _ = require('lodash'),
     $ = require('cheerio');
 
-module.exports = function (options, $containers) {
+module.exports = function (options, $containers, callback) {
     var toons = [],
         battleData = require('../config/battle-data')(options);
 
     _.each($containers, function (container, i) {
         var $container = $(container),
-            toon = battleData.toon;
+            toon = _.clone(battleData.toon, true);
 
         // parse name
         var nameContainer = $container.find('div:not(:has(div)):has(img[src*="guild_bp_"])');
@@ -25,20 +25,20 @@ module.exports = function (options, $containers) {
             var levelContainerArray = $(levelContainer).text().trim().split('Status');
 
             if (levelContainerArray.length === 2) {
-                toon.level = parseInt($(levelContainerArray[0]).trim().split(':')[1]);
+                toon.level = parseInt(levelContainerArray[0].trim().split(':')[1]);
             }
         }
 
         // parse health and battle points
         var healthAndBattlePointsContainer = $container.find('div:not(:has(div)):has(img[title="Health"])');
         if (healthAndBattlePointsContainer.length > 0) {
-            var healthAndBattlePointsText = $(healthAndBattlePointsContainer).text().trim(),
+            var healthAndBattlePointsText = healthAndBattlePointsContainer.text().trim(),
                 healthAndBattlePointsArray = healthAndBattlePointsText.split('Battle');
 
             if (healthAndBattlePointsArray.length === 2) {
                 var currentHealth = parseInt(healthAndBattlePointsArray[0].split('/')[0]),
                     totalHealth = parseInt(healthAndBattlePointsArray[0].split('/')[1]),
-                    battlePoints = parseInt(healthAndBattlePointsArray[1]);
+                    battlePoints = parseInt(healthAndBattlePointsArray[1].split(':')[1]);
 
                 toon.health.current = currentHealth;
                 toon.health.total = totalHealth;
@@ -60,5 +60,5 @@ module.exports = function (options, $containers) {
         toons.push(toon);
     });
 
-    return toons;
+    callback(null, toons);
 };

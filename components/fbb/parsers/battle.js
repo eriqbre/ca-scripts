@@ -4,15 +4,17 @@
 
 var cheerio = require('cheerio'),
     config = require('../config'),
-    toons = require('../../../parsers/tower-toons'),
+    toonParser = require('../../../parsers/tower-toons');
     _ = require('lodash');
 
 module.exports = function (options, response, callback) {
 	var $ = cheerio.load(response.body),
         battleData = require('../../../config/battle-data')(options),
-        data = battleData.tower,
-        activeTower = $('div#guild_battle_section_log_list').attr('class').replace('show_', ''),
-        allies = options.form.view_allies ? true:false;
+        data = battleData.castle,
+        enterBattleInput = $('input[name="action"][value="enter_battle"]'),
+        containers = $('.guild_battle_container'),
+        side = options.form.view_allies ? 'attacker' : 'defender',
+        towerNumber = options.form.sel_pos || '1';
 
 	data.isInBattle = $('input[value="enter_battle"]').length === 0;
 
@@ -35,8 +37,14 @@ module.exports = function (options, response, callback) {
 
     // parse opponent status 100/100
 
-    // parse tower
-    var toons =
+    data.meta = {
+        side: side,
+        tower: 't' + towerNumber
+    };
+
+    toonParser(options, $(containers), function (error, toons) {
+        data[data.meta.side].towers.push(battleData.tower({name: data.meta.tower, toons: toons}));
+    });
 
     data.towers = config.towers;
 

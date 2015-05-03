@@ -15,43 +15,24 @@ module.exports = function (options) {
             name: '',
             points: 0
         },
-        tower: {
+        tower: function (options) {
+            return {
+                isLocked: false,
+                name: options.name,
+                remaining: 0,
+                total: 0,
+                type: '',
+                toons: options.toons
+            }
+        },
+        castle: {
             action: options.action,
             attacker: {
                 id: '',
                 name: '',
                 remaining: 0,
                 total: 0,
-                towers: {
-                    north: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    },
-                    west: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    },
-                    east: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    },
-                    south: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    }
-                }
+                towers: []
             },
             damage: {
                 attacker: 0,
@@ -62,36 +43,7 @@ module.exports = function (options) {
                 name: '',
                 remaining: 0,
                 total: 0,
-                towers: {
-                    north: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    },
-                    west: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    },
-                    east: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    },
-                    south: {
-                        isLocked: false,
-                        remaining: 0,
-                        total: 0,
-                        type: '',
-                        toons: []
-                    }
-                }
+                towers: []
             },
             health: {
                 attacker: 0,
@@ -99,6 +51,10 @@ module.exports = function (options) {
             },
             id: '',
             isInBattle: false,
+            meta: {
+                side: '',
+                tower: ''
+            },
             remaining: {
                 attackers: 0,
                 defenders: 0
