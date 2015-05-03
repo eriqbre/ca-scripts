@@ -94,8 +94,8 @@ module.exports = function (options, callback) {
                 };
 
             // targets - sort by cleric, highest level, health > 0
-            availableTargets = _.select(availableTargets, function (toon) {
-                return toon.health > 0;
+            availableTargets = _.filter(availableTargets, function (toon) {
+                return toon.health > 200;
             });
             availableTargets.sort(function (a, b) {
                 switch (a.class) {
