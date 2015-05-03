@@ -9,7 +9,7 @@ module.exports = function (options, response, callback) {
 	var $ = cheerio.load(response.body),
 		identifier = util.format('div#team_content_%s input[name="battle_id"]', options.toon.configs[options.role]['squad']);
 		data = {
-			battle_id: $(identifier).attr('value')
+			id: $(identifier).attr('value')
 		};
 
 	callback(null, data);

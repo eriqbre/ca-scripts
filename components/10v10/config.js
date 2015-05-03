@@ -4,7 +4,7 @@
 
 module.exports = {
     towers: [
-        {view_allies: true},
+        {view_allies: 'true'},
         {}
     ]
 };

@@ -10,8 +10,8 @@ module.exports = function (options, response, callback) {
 	var $ = cheerio.load(response.body),
 		data = battleData(options),
 		attackerGuildId = $('input[name="attacker_guild_id"]'),
-		defenderGuildId = $('input[name="defender_guild_id"]');
-	enterBattleInput = $('input[name="action"][value="enter_battle"]');
+		defenderGuildId = $('input[name="defender_guild_id"]'),
+	    enterBattleInput = $('input[name="action"][value="enter_battle"]');
 
 	if (attackerGuildId) {
 		data.attacker.id = attackerGuildId.val();

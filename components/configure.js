@@ -12,7 +12,8 @@ module.exports = function (options) {
         case '10v10-actions':
             var config = {
                 parser: require('./10v10/parsers/battle'),
-                url: routes.hvhBattle
+                timeout: 10000,
+                url: routes.tvt
             };
 
             return {
@@ -21,7 +22,9 @@ module.exports = function (options) {
                         form: require('./10v10/forms/home')(options),
                         jar: options.jar,
                         parser: require('./10v10/parsers/home'),
-                        url: routes.hvh
+                        role: options.role,
+                        toon: options.toon,
+                        url: routes.tvtHome
                     }), callback);
                 },
                 action: function (options, callback) {
@@ -44,8 +47,10 @@ module.exports = function (options) {
                 },
                 tower: function (options, callback) {
                     return request(_.extend(_.clone(config, true), {
+                        battle: options.battle,
                         form: require('./10v10/forms/tower')(options),
-                        jar: options.jar
+                        jar: options.jar,
+                        tower: options.tower
                     }), callback);
                 }
             };
@@ -53,6 +58,7 @@ module.exports = function (options) {
         case '100v100-actions':
             var config = {
                 parser: require('./100v100/parsers/battle'),
+                timeout: 10000,
                 url: routes.hvhBattle
             };
 
@@ -94,6 +100,7 @@ module.exports = function (options) {
         case 'fbb-actions':
             var config = {
                 parser: require('./fbb/parsers/battle'),
+                timeout: 10000,
                 url: routes.fbbEnter
             };
 

@@ -18,7 +18,7 @@ module.exports = function (options) {
         });
 
     // each toon can override the default blessing with their own default, or with a day-specific blessing
-    if (1 === 0 && options.config && options.config['demi-blessing']) {
+    if (options.config && options.config['demi-blessing']) {
         // account for timezone difference
         today.setHours(today.getHours() - 3);
         dayOfWeek = daysOfWeek[today.getDay()];

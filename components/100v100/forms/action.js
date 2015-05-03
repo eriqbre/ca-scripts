@@ -5,6 +5,8 @@
 var guild = require('../../../config/guild');
 
 module.exports = function (options) {
+    // if options.action.target then search the towers for that target and use their form
+    // todo: come up with something cool for deciding whom to attack
     var form = {
         attack_type: options.action.type,
         attack_key: options.action.key,

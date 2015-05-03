@@ -4,7 +4,7 @@
 
 var cheerio = require('cheerio');
 
-module.exports = function (response, callback) {
+module.exports = function (options, response, callback) {
 	var $ = cheerio.load(response.body),
 		data = {
 			attacker_guild_id: $('input[name="attacker_guild_id"]').attr('value'),

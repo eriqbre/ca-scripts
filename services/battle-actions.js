@@ -5,7 +5,7 @@
 
 var async = require('async'),
     battleSetup = require('../components/configure'),
-    loadout = require('../requests/loadouts'),
+    loadouts = require('../requests/loadouts'),
     login = require('../requests/sequences/login-sequence'),
     Task = require('../models/task'),
     _ = require('lodash');
@@ -36,7 +36,7 @@ module.exports = function (options, callback) {
         // hit the battle home page and grab the enter information (this is the page with the big red Join Battle button)
         function (options, callback) {
             async.mapSeries(options.toons, function (toon, callback) {
-                battle.home({jar: toon.jar}, function (error, data) {
+                battle.home({jar: toon.jar, role: options.role, toon: toon}, function (error, data) {
                     // update options with data from the main call, this will tell us how to get into the battle
 		            toon.battle = data;
 		            callback(null, options);
@@ -57,20 +57,26 @@ module.exports = function (options, callback) {
         },
         // if needed, click to enter battle
         function (options, callback) {
-            async.mapSeries(_.filter(options.toons, function (toon) {
-                return !toon.data.isInBattle;
-            }), function (toon, callback) {
-                battle.join({jar: toon.jar, battle: toon.battle}, function (error, data) {
-                    callback(null, _.extend(toon, {battle: data}));
-                });
-            }, function (error, data) {
-                callback(null, options);
+            var toons = _.filter(options.toons, function (toon) {
+                return !toon.battle.isInBattle;
             });
+
+            if (toons.length){
+                async.mapSeries(toons, function (toon, callback) {
+                    battle.join({jar: toon.jar, battle: toon.battle}, function (error, data) {
+                        callback(null, _.extend(toon, {battle: data}));
+                    });
+                }, function (error, data) {
+                    callback(null, options);
+                });
+            } else {
+                callback(null, options);
+            }
         },
         // get tower data for both sides
         function (options, callback) {
-            async.mapSeries(options.toons, function (toon, callback) {
-                async.mapSeries(toon.battle.towers, function (tower, callback) {
+            async.map(options.toons, function (toon, callback) {
+                async.map(toon.battle.towers, function (tower, callback) {
                     battle.tower({jar: toon.jar, tower: tower, battle: toon.battle}, function (error, data) {
                         // add tower data to the toon
                         callback(error, _.extend(toon, {battle: data}));
@@ -87,18 +93,21 @@ module.exports = function (options, callback) {
         },
         // execute actions
         function (options, callback) {
-            async.mapSeries(options.toons, function (toon, callback) {
+            async.map(options.toons, function (toon, callback) {
                 // for each toon, execute the series of actions defined in the config
-                async.map(toon.configs['fbb-actions']['actions'], function (action, callback) {
+                async.mapSeries(toon.configs[options.role]['actions'], function (action, callback) {
                     // for each action, execute the following scripts which could include loadout changes
                     async.waterfall([
                         // if the action has a loadout requirement and the loadout is different from the currently selected one
                         function (callback) {
-                            // todo: defined the selected loadout
-                            if (action.loadout && !toon.data.loadouts) {
-                                loadouts({jar: toon.jar, loadout: action.loadout}, function (error, data) {
-                                    // todo: update toon with data from loadout request
-                                    callback(null, _.extend(toon, {}));
+                            // get the currently selected loadout
+                            var loadout = _.filter(toon.data.loadouts, function(load){
+                                return load.selected && load.id !== action.loadout;
+                            });
+
+                            if (loadout.length && action.loadout) {
+                                loadouts({jar: toon.jar, loadout: action.loadout}, options.role, function (error, data) {
+                                    callback(null, _.extend(toon, { loadouts: data.loadouts }));
                                 });
                             } else {
                                 callback(null, toon);
@@ -106,7 +115,8 @@ module.exports = function (options, callback) {
                         },
                         // trigger the defined action
                         function (toon, callback) {
-                            trigger(toon, function (error, data) {
+                            // todo: trigger recursive actions to counter tripping
+                            trigger({ action: action, toon: toon, jar: toon.jar }, function (error, data) {
                                 callback(null, _.extend(toon, {}));
                             });
                         }
