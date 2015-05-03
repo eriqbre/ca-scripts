@@ -20,7 +20,7 @@ module.exports = function (options, callback) {
     parse = function (options, callback) {
         var symbols = ['energy', 'attack', 'defense', 'health', 'stamina'],
             result = {
-                tribute: symbols[parseInt((options.form.symbol || '1'))]
+                //tribute: symbols[parseInt((options.form.symbol || '1'))]
             };
 
         callback(result);
