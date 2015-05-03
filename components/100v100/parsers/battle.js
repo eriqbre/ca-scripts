@@ -3,12 +3,12 @@
  */
 
 var cheerio = require('cheerio'),
-	battleData = require('../../../config/battle-data'),
 	config = require('../config');
 
 module.exports = function (options, response, callback) {
 	var $ = cheerio.load(response.body),
-		data = battleData(options),
+		battleData = require('../../../config/battle-data')(options),
+		data = battleData.tower,
 		attackerGuildId = $('input[name="attacker_guild_id"]'),
 		defenderGuildId = $('input[name="defender_guild_id"]'),
 	    enterBattleInput = $('input[name="action"][value="enter_battle"]');

@@ -3,17 +3,20 @@
  */
 
 var cheerio = require('cheerio'),
-    battleData = require('../../../config/battle-data'),
-    config = require('../config');
+    config = require('../config'),
+    toonParser = require('../../../parsers/tower-toons');
 
 module.exports = function (options, response, callback) {
-    var $ = cheerio.load(response),
-        data = battleData(options),
-        enterBattleInput = $('input[name="action"][value="enter_battle"]');
+    var $ = cheerio.load(response.body),
+        battleData = require('../../../config/battle-data')(options),
+        data = battleData.tower,
+        enterBattleInput = $('input[name="action"][value="enter_battle"]'),
+        containers = $('.guild_battle_container');
 
     data.id = options.form.battle_id;
     data.isInBattle = enterBattleInput.length === 0;
     data.towers = config.towers;
+    var toons = toonParser(options, $(containers));
 
     callback(null, data);
 };

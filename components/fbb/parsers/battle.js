@@ -3,14 +3,14 @@
  */
 
 var cheerio = require('cheerio'),
-	battleData = require('../../../config/battle-data'),
     config = require('../config'),
     toons = require('../../../parsers/tower-toons'),
     _ = require('lodash');
 
 module.exports = function (options, response, callback) {
 	var $ = cheerio.load(response.body),
-		data = battleData(options),
+        battleData = require('../../../config/battle-data')(options),
+        data = battleData.tower,
         activeTower = $('div#guild_battle_section_log_list').attr('class').replace('show_', ''),
         allies = options.form.view_allies ? true:false;
 
