@@ -15,6 +15,13 @@ module.exports = function (options, response, callback) {
         side = options.form.view_allies ? 'attacker' : 'defender',
         towerNumber = options.form.sel_pos || '1';
 
+	data.attacker.towers = {
+		t1: {}
+	};
+	data.defender.towers = {
+		t1: {}
+	};
+
     data.id = options.form.battle_id;
     data.isInBattle = enterBattleInput.length === 0;
     data.towers = config.towers;

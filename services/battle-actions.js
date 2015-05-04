@@ -125,6 +125,7 @@ module.exports = function (options, callback) {
                             // todo: trigger recursive actions to counter tripping
                             // combine all the towers into one array
                             var targeted;
+	                        // search the array for the desired target
                             _.each(toon.battle.attacker.towers, function (tower) {
                                 _.each(tower.toons, function (target) {
                                     if (target.form.inputs.length > 0) {
@@ -136,15 +137,19 @@ module.exports = function (options, callback) {
                                     }
                                 });
                             });
-                            // search the array for the desired target
-                            trigger({
-                                action: action,
-                                toon: toon,
-                                jar: toon.jar,
-                                form: _.extend(targeted.form, action.inputs)
-                            }, function (error, data) {
-                                callback(null, _.extend(toon, {}));
-                            });
+
+	                        if (targeted) {
+		                        trigger({
+			                        action: action,
+			                        toon: toon,
+			                        jar: toon.jar,
+			                        form: _.extend(targeted.form, action.inputs)
+		                        }, function (error, data) {
+			                        callback(null, _.extend(toon, {}));
+		                        });
+	                        } else {
+		                        callback(null, _.extend(toon, {}));
+	                        }
                         }
                     ], function (error, data) {
 	                    callback(null, data);
