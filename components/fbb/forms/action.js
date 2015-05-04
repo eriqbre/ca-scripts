@@ -20,5 +20,9 @@ module.exports = function(options){
 		target_id: ''   // id of the toon you're performing an action upon
 	};
 
+	if (!data.is_attacker) {
+		data.is_attacker = '';
+	}
+
 	return form;
 };

@@ -36,11 +36,11 @@ module.exports = function (options, response, callback) {
 
 		data.meta = {
 			side: side,
-			tower: side === 'attacker' ? 'h' : 't' + towerNumber
+			tower: 't' + towerNumber
 		};
 
 		toonParser(options, $(containers), function (error, toons) {
-			data[data.meta.side].towers.push(battleData.tower({name: data.meta.tower, toons: toons}));
+			data[data.meta.side].towers[data.meta.tower] = battleData.tower({name: data.meta.tower, toons: toons});
 		});
 
 		data.towers = config.towers;

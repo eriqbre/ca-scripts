@@ -32,7 +32,12 @@ module.exports = function (options) {
                 name: '',
                 remaining: 0,
                 total: 0,
-                towers: []
+	            towers: {
+		            t1: {},
+		            t2: {},
+		            t3: {},
+		            t4: {}
+	            }
             },
             damage: {
                 attacker: 0,
@@ -43,7 +48,12 @@ module.exports = function (options) {
                 name: '',
                 remaining: 0,
                 total: 0,
-                towers: []
+	            towers: {
+		            t1: {},
+		            t2: {},
+		            t3: {},
+		            t4: {}
+	            }
             },
             health: {
                 attacker: 0,

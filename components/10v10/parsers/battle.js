@@ -19,14 +19,14 @@ module.exports = function (options, response, callback) {
     data.isInBattle = enterBattleInput.length === 0;
     data.towers = config.towers;
 
-    data.meta = {
-        side: side,
-        tower: 't' + towerNumber
-    };
+	data.meta = {
+		side: side,
+		tower: 't' + towerNumber
+	};
 
-    toonParser(options, $(containers), function (error, toons) {
-        data[data.meta.side].towers.push(battleData.tower({name: data.meta.tower, toons: toons}));
-    });
+	toonParser(options, $(containers), function (error, toons) {
+		data[data.meta.side].towers[data.meta.tower] = battleData.tower({name: data.meta.tower, toons: toons});
+	});
 
     callback(null, data);
 };

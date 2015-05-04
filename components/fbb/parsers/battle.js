@@ -8,45 +8,49 @@ var cheerio = require('cheerio'),
     _ = require('lodash');
 
 module.exports = function (options, response, callback) {
-	var $ = cheerio.load(response.body),
-        battleData = require('../../../config/battle-data')(options),
-        data = battleData.castle,
-        enterBattleInput = $('input[name="action"][value="enter_battle"]'),
-        containers = $('.guild_battle_container'),
-        side = options.form.view_allies ? 'attacker' : 'defender',
-        towerNumber = options.form.sel_pos || '1';
+	var $ = cheerio.load(response.body);
 
-	data.isInBattle = $('input[value="enter_battle"]').length === 0;
+	process.nextTick(function () {
 
-	if (data.isInBattle) {
-        // parse tokens and timeToNextToken
+		battleData = require('../../../config/battle-data')(options),
+			data = battleData.castle,
+			enterBattleInput = $('input[name="action"][value="enter_battle"]'),
+			containers = $('.guild_battle_container'),
+			side = options.form.view_allies ? 'attacker' : 'defender',
+			towerNumber = options.form.sel_pos || '1';
 
-        // parse toon health
+		data.isInBattle = $('input[value="enter_battle"]').length === 0;
 
-        // parse toon activity total
+		if (data.isInBattle) {
+			// parse tokens and timeToNextToken
 
-        // parse buffs
-    }
-    // parse time remaining
+			// parse toon health
 
-    // parse allies status 100/100
-	data.attacker.id = options.form.attacker_guild_id;
+			// parse toon activity total
 
-    // parse opponent name
-	data.defender.id = options.form.defender_guild_id;
+			// parse buffs
+		}
+		// parse time remaining
 
-    // parse opponent status 100/100
+		// parse allies status 100/100
+		data.attacker.id = options.form.attacker_guild_id;
 
-    data.meta = {
-        side: side,
-        tower: 't' + towerNumber
-    };
+		// parse opponent name
+		data.defender.id = options.form.defender_guild_id;
 
-    toonParser(options, $(containers), function (error, toons) {
-        data[data.meta.side].towers.push(battleData.tower({name: data.meta.tower, toons: toons}));
-    });
+		// parse opponent status 100/100
 
-    data.towers = config.towers;
+		data.meta = {
+			side: side,
+			tower: 't' + towerNumber
+		};
 
-	callback(null, data)
+		toonParser(options, $(containers), function (error, toons) {
+			data[data.meta.side].towers[data.meta.tower] = battleData.tower({name: data.meta.tower, toons: toons});
+		});
+
+		data.towers = config.towers;
+
+		callback(null, data);
+	});
 };

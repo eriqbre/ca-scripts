@@ -5,6 +5,7 @@
 var app = require('./app'),
     async = require('async'),
     attack = require('./services/lom-actions'),
+	battleActions = require('./services/battle-actions'),
     cronJob = require('cron').CronJob,
     cronfigs = require('./config/cron'),
     changeLoadouts = require('./services/change-loadouts'),
@@ -51,4 +52,16 @@ app.listen(cronfigs.port, function () {
         start: true,
         timeZone: cronfigs.timeZone
     });
+
+	// check for 10v10 battle-actions
+	new cronJob({
+		cronTime: cronfigs.tvtActions.time,
+		onTick: function () {
+			battleActions({role: '10v10-actions'}, function (error, data) {
+				console.log('completed battle-actions');
+			});
+		},
+		start: true,
+		timeZone: cronfigs.timeZone
+	});
 });

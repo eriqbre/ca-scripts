@@ -14,5 +14,9 @@ module.exports = function (options) {
         view_allies: options.action.view === 'allies'
     };
 
+	if (!data.is_attacker) {
+		data.is_attacker = '';
+	}
+
     return form;
 };

@@ -76,14 +76,10 @@ module.exports = function (options, callback) {
         // get tower data for both sides
         function (options, callback) {
             async.map(options.toons, function (toon, callback) {
-                async.mapSeries(toon.battle.towers, function (tower, callback) {
+	            async.map(toon.battle.towers, function (tower, callback) {
                     battle.tower({jar: toon.jar, tower: tower, battle: toon.battle}, function (error, data) {
                         // add tower data to the toon only if it doesn't already exist
-                        if (!_.find(toon.battle[data.meta.side].towers, function (tower) {
-                                return tower.name = data[data.meta.side].towers[0].name;
-                            })) {
-                            toon.battle[data.meta.side].towers.push(data[data.meta.side].towers[0]);
-                        }
+	                    toon.battle[data.meta.side].towers[data.meta.tower] = data[data.meta.side].towers[data.meta.tower];
                         callback(error, toon);
                     });
                 }, function (error, data) {
