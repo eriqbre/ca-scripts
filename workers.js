@@ -3,7 +3,6 @@
  */
 
 var app = require('./app'),
-    async = require('async'),
     attack = require('./services/lom-actions'),
 	battleActions = require('./services/battle-actions'),
     cronJob = require('cron').CronJob,
@@ -58,22 +57,23 @@ app.listen(cronfigs.port, function () {
 		cronTime: cronfigs.tvtActions.time,
 		onTick: function () {
 			battleActions({role: '10v10-actions'}, function (error, data) {
-				console.log('completed battle-actions');
+				console.log('completed battle-actions for 10v10');
 			});
 		},
 		start: true,
 		timeZone: cronfigs.timeZone
 	});
 
-	// check for 100v100 battle-actions
-	new cronJob({
-		cronTime: cronfigs.hvhActions.time,
-		onTick: function () {
-			battleActions({role: '100v100-actions'}, function (error, data) {
-				console.log('completed battle-actions');
-			});
-		},
-		start: true,
-		timeZone: cronfigs.timeZone
+	cronfigs.hvhActions.times.map(function (cronfig) {
+		new cronJob({
+			cronTime: cronfig.time,
+			onTick: function () {
+				battleActions({role: '100v100-actions'}, function (error, data) {
+					console.log('completed battle-actions for 100v100');
+				});
+			},
+			start: true,
+			timeZone: cronfigs.timeZone
+		});
 	});
 });
