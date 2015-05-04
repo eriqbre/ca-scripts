@@ -64,4 +64,16 @@ app.listen(cronfigs.port, function () {
 		start: true,
 		timeZone: cronfigs.timeZone
 	});
+
+	// check for 100v100 battle-actions
+	new cronJob({
+		cronTime: cronfigs.hvhActions.time,
+		onTick: function () {
+			battleActions({role: '100v100-actions'}, function (error, data) {
+				console.log('completed battle-actions');
+			});
+		},
+		start: true,
+		timeZone: cronfigs.timeZone
+	});
 });

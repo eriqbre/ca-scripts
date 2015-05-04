@@ -17,6 +17,11 @@ module.exports = function (options, callback) {
             battle.action(options, function (error, data) {
                 // success is defined as the action being triggered, regardless of the success or failure of the action
                 if (data.success) {
+	                task.data.push({
+		                target: options.form.target_id,
+		                type: options.form.attack_type,
+		                action: options.form.action
+	                });
                     callback(error, data);
                 } else {
                     // if we tripped, keep on trying
@@ -140,13 +145,16 @@ module.exports = function (options, callback) {
                                 callback(null, _.extend(toon, {}));
                             });
                         }
-                    ])
+                    ], function (error, data) {
+	                    callback(null, data);
+                    });
                 }, function (error, data) {
                     // all config actions complete for a given toon
                     callback(null, toon);
                 });
             }, function (error, data) {
                 // all actions complete for all toons
+	            callback(null, options);
             });
         }
     ], function (error, data) {
