@@ -12,7 +12,9 @@ module.exports = function (options, callback) {
     options = form(options);
 
     request(options, function (error, response) {
-        callback(null, {});
+        process.nextTick(function () {
+            callback(null, {});
+        });
         //_this.parse(options, function (data) { callback(null, data); });
     });
 
