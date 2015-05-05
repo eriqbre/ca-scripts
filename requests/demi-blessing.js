@@ -12,9 +12,8 @@ module.exports = function (options, callback) {
     options = form(options);
 
     request(options, function (error, response) {
-        _this.parse(options, function (data) {
-            callback(null, data);
-        });
+        callback(null, {});
+        //_this.parse(options, function (data) { callback(null, data); });
     });
 
     parse = function (options, callback) {
