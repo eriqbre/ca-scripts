@@ -64,7 +64,7 @@ module.exports = function (options, callback) {
         // if needed, click to enter battle
         function (options, callback) {
             var toons = _.filter(options.toons, function (toon) {
-                return !toon.battle.isInBattle;
+	            return !toon.battle.isInBattle && !toon.battle.isOver;
             });
 
             if (toons.length){
@@ -81,7 +81,9 @@ module.exports = function (options, callback) {
         },
         // get tower data for both sides
         function (options, callback) {
-            async.map(options.toons, function (toon, callback) {
+	        async.map(_.filter(options.toons, function (toon) {
+		        return !toon.battle.isOver;
+	        }), function (toon, callback) {
 	            async.map(toon.battle.towers, function (tower, callback) {
                     battle.tower({jar: toon.jar, tower: tower, battle: toon.battle}, function (error, data) {
                         // add tower data to the toon only if it doesn't already exist
@@ -100,7 +102,9 @@ module.exports = function (options, callback) {
         },
         // execute actions
         function (options, callback) {
-            async.map(options.toons, function (toon, callback) {
+	        async.map(_.filter(options.toons, function (toon) {
+		        return !toon.battle.isOver;
+	        }), function (toon, callback) {
                 // for each toon, execute the series of actions defined in the config
                 async.mapSeries(toon.configs[options.role]['actions'], function (action, callback) {
                     // for each action, execute the following scripts which could include loadout changes

@@ -13,8 +13,8 @@ module.exports = {
 	},
     hvhCollect: {
         times: [
-            {time: "30 0 8,14,20 * * 1-3", type: 'morning schedule'},
-            {time: "30 0 2,14,20 * * 0,4-6", type: 'night schedule'}
+	        {time: "1 8,14,20 * * 1-3", type: 'morning schedule'},
+	        {time: "1 2,14,20 * * 0,4-6", type: 'night schedule'}
         ]
     },
 	tvtActions: {
@@ -22,7 +22,7 @@ module.exports = {
 		//time: "0 * * * * *"
 	},
     tvtCollect: {
-	    time: "1 9,3,9 * * *"
+	    time: "31 9,3,9 * * *"
     },
     loadouts: {
         times: [

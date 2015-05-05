@@ -60,7 +60,9 @@ module.exports = function (options) {
                 defender: 0
             },
             id: '',
+	        isCollectAvailable: false,
             isInBattle: false,
+	        isOver: false,
             meta: {
                 side: '',
                 tower: ''

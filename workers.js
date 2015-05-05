@@ -5,6 +5,7 @@
 var app = require('./app'),
     attack = require('./services/lom-actions'),
 	battleActions = require('./services/battle-actions'),
+	battleCollection = require('./services/battle-collect'),
     cronJob = require('cron').CronJob,
     cronfigs = require('./config/cron'),
     changeLoadouts = require('./services/change-loadouts'),
@@ -64,12 +65,27 @@ app.listen(cronfigs.port, function () {
 		timeZone: cronfigs.timeZone
 	});
 
+	// check for 100v100 battle-actions
 	cronfigs.hvhActions.times.map(function (cronfig) {
 		new cronJob({
 			cronTime: cronfig.time,
 			onTick: function () {
 				battleActions({role: '100v100-actions'}, function (error, data) {
 					console.log('completed battle-actions for 100v100');
+				});
+			},
+			start: true,
+			timeZone: cronfigs.timeZone
+		});
+	});
+
+	// auto-collect for 100v100 battle
+	cronfigs.hvhCollect.times.map(function (cronfig) {
+		new cronJob({
+			cronTime: cronfig.time,
+			onTick: function () {
+				battleCollection({role: 'auto-collect-100v100'}, function (error, data) {
+					console.log('completed battle-collection for 100v100');
 				});
 			},
 			start: true,

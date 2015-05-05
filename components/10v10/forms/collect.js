@@ -4,7 +4,7 @@
 module.exports = function (options) {
     return {
         action: 'collect_battle',
-        battle_id: options.id,
+	    battle_id: options.battle.id,
         ajax: '1'
     }
 };
