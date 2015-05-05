@@ -11,7 +11,7 @@ var async = require('async'),
     _ = require('lodash');
 
 module.exports = function (options, callback) {
-	console.log('starting battle-actions worker');
+	console.log('starting battle-actions worker for ' + options.role);
     var task = new Task({name: 'battle-actions', type: options.role, data: []}),
         battle = battleSetup(options),
         trigger = function (options, callback) {

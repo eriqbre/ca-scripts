@@ -18,7 +18,8 @@ module.exports = {
         ]
     },
 	tvtActions: {
-		time: "1 9,3,9 * * *"
+		time: "30 0 9,3,9 * * *"
+		//time: "0 * * * * *"
 	},
     tvtCollect: {
 	    time: "1 9,3,9 * * *"
