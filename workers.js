@@ -65,6 +65,18 @@ app.listen(cronfigs.port, function () {
 		timeZone: cronfigs.timeZone
 	});
 
+	// check for 10v10 battle-collection
+	new cronJob({
+		cronTime: cronfigs.tvtCollect.time,
+		onTick: function () {
+			battleActions({role: 'auto-collect-10v10'}, function (error, data) {
+				console.log('completed battle-collection for 10v10');
+			});
+		},
+		start: true,
+		timeZone: cronfigs.timeZone
+	});
+
 	// check for 100v100 battle-actions
 	cronfigs.hvhActions.times.map(function (cronfig) {
 		new cronJob({
