@@ -8,7 +8,7 @@ var request = require('request'),
     async = require('async');
 
 module.exports = function (options, callback) {
-    require('events').EventEmitter.prototype._maxListeners = 100;
+    //require('events').EventEmitter.setMaxListeners(0);
     //require('request-debug')(request);
     var _this = this,
         headers = {
