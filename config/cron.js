@@ -35,7 +35,8 @@ module.exports = {
         //time: "0 * * * * *"
     },
     maintenance: {
-        time: "0,20,40 * * * *",
+        time: "5,25,45 * * * *",
+        //time: "0 * * * * *",
         roles: [
             "demi-blessing",
             "collect-resources",
