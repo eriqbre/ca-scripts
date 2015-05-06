@@ -24,7 +24,7 @@ module.exports = function (options, callback) {
 		},
 		// hit the battle home page and grab the enter information (this is the page with the big red Join Battle button)
 		function (options, callback) {
-			async.mapSeries(options.toons, function (toon, callback) {
+			async.map(options.toons, function (toon, callback) {
 				battle.home({jar: toon.jar, role: options.role, toon: toon}, function (error, data) {
 					// update options with data from the main call, this will tell us how to get into the battle
 					toon.battle = data;
@@ -34,12 +34,51 @@ module.exports = function (options, callback) {
 				callback(null, options);
 			});
 		},
+		// enter the battle page
+		function (options, callback) {
+			async.map(options.toons, function (toon, callback) {
+				battle.enter({jar: toon.jar, id: toon.battle.id, battle: toon.battle}, function (error, data) {
+					callback(null, _.extend(toon.battle, data));
+				});
+			}, function (error, data) {
+				callback(null, options);
+			});
+		},
+		// get tower data, we'll use this to figure out if the toon has a threshold for favor point collecting.
+		function (options, callback) {
+			async.map(_.filter(options.toons, function (toon) {
+				// only bother doing this with toons that have an fp-threshold defined
+				return toon.battle.isOver && toon.configs[options.role] && toon.configs[options.role]['fp-threshold'];
+			}), function (toon, callback) {
+				async.map(_.filter(toon.battle.towers, function (tower) {
+					return tower.view_allies;
+				}), function (tower, callback) {
+					battle.tower({jar: toon.jar, tower: tower, battle: toon.battle}, function (error, data) {
+						// add tower data to the toon only if it doesn't already exist
+						toon.battle[data.meta.side].towers[data.meta.tower] = data[data.meta.side].towers[data.meta.tower];
+						callback(error, toon);
+					});
+				}, function (error, data) {
+					// all tower data compiled
+					callback(error, options);
+				});
+
+			}, function (error, data) {
+				// tower data compiled for all toons
+				callback(error, options);
+			});
+		},
 		// trigger collection, if available
 		function (options, callback) {
 			async.map(_.filter(options.toons, function (toon) {
 				return toon.battle.isCollectAvailable;
 			}), function (toon, callback) {
-				battle.collect({jar: toon.jar, battle: toon.battle}, function (error, data) {
+				battle.collect({
+					jar: toon.jar,
+					battle: toon.battle,
+					role: options.role,
+					toon: toon
+				}, function (error, data) {
 					callback(null, data);
 				});
 			}, function (error, data) {

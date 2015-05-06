@@ -68,7 +68,7 @@ module.exports = function (options, callback) {
             });
 
             if (toons.length){
-                async.mapSeries(toons, function (toon, callback) {
+	            async.map(toons, function (toon, callback) {
                     battle.join({jar: toon.jar, battle: toon.battle}, function (error, data) {
                         callback(null, _.extend(toon, {battle: data}));
                     });

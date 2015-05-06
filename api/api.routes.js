@@ -29,6 +29,7 @@ module.exports = function (app) {
 	// process routes
 	require('./processes/create-bot')(app);
     require('./processes/battle-actions')(app);
+	require('./processes/battle-collect')(app);
     require('./processes/loadouts')(app);
     require('./processes/lom-check')(app);
     require('./processes/use-lom-actions')(app);

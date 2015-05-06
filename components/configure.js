@@ -167,6 +167,12 @@ module.exports = function (options) {
 					    form: require('./100v100/forms/collect')(options),
 					    jar: options.jar
 				    }), callback);
+			    },
+			    tower: function (options, callback) {
+				    return request(_.extend(_.clone(config, true), {
+					    form: require('./100v100/forms/tower')(options),
+					    jar: options.jar
+				    }), callback);
 			    }
 		    };
 		    break;
