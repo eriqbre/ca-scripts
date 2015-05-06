@@ -12,6 +12,8 @@ module.exports = function (options, callback) {
     options.form = form;
 
     request(options, function (error, response) {
-        callback(null, {});
+        process.nextTick(function () {
+            callback(null, {});
+        });
     });
 };

@@ -12,7 +12,7 @@ module.exports = function (options) {
             form: {
                 action: 'tributeHeader',
                 ajax: '1',
-                symbol: options.default
+                symbol: options.default || '2'
             },
             url: routes.index
         });
