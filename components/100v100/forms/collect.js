@@ -17,4 +17,6 @@ module.exports = function (options) {
 	if (options.toon.configs[options.role] && options.toon.configs[options.role]['fp-threshold'] && options.battle.points > parseInt(options.toon.configs[options.role]['fp-threshold'])) {
 		form.bonus_collect = '1';
 	}
+
+	return form;
 };

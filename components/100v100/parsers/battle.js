@@ -20,7 +20,7 @@ module.exports = function (options, response, callback) {
 			side = options.form.view_allies ? 'attacker' : 'defender',
 			towerNumber = options.form.sel_pos || '1',
 			battleIsOver = $('div:not(:has(div)):contains("VICTOR")').length > 0,
-			collectAvailable = $('input[name="collect_battle"]').length > 0;
+			collectAvailable = $('input[value="collect_battle"][name="action"]').length > 0;
 
 		data.isCollectAvailable = collectAvailable;
 		data.isOver = battleIsOver;

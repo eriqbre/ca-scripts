@@ -12,7 +12,24 @@ var async = require('async'),
 module.exports = function (options, callback) {
 	console.log('starting battle-collect worker for ' + options.role);
 	var task = new Task({name: 'battle-collect', type: options.role, data: []}),
-		battle = battleSetup(options);
+		battle = battleSetup(options),
+		trigger = function (options, callback) {
+			// trigger collection
+			battle.collect({
+				battle: options.battle,
+				jar: options.jar,
+				role: options.role,
+				toon: options.toon
+			}, function (error, data) {
+				// if successful this should be false
+				if (!data.isCollectAvailable) {
+					callback(null, data);
+				} else {
+					// if true, that means we tripped or some other stupid error
+					trigger(options, callback);
+				}
+			});
+		};
 
 	async.waterfall([
 		// log in anyone participating in this role
@@ -73,12 +90,8 @@ module.exports = function (options, callback) {
 			async.map(_.filter(options.toons, function (toon) {
 				return toon.battle.isCollectAvailable;
 			}), function (toon, callback) {
-				battle.collect({
-					jar: toon.jar,
-					battle: toon.battle,
-					role: options.role,
-					toon: toon
-				}, function (error, data) {
+				trigger({toon: toon, battle: toon.battle, role: options.role, jar: toon.jar}, function (error, data) {
+					task.data.push({name: toon.name});
 					callback(null, data);
 				});
 			}, function (error, data) {
@@ -86,7 +99,12 @@ module.exports = function (options, callback) {
 			});
 		}
 	], function (error, data) {
-		if (callback) {
+		// save task data if there is any
+		if (task.data.length > 0) {
+			task.save(function (error) {
+				callback(null, data);
+			});
+		} else {
 			callback(null, data);
 		}
 	});
