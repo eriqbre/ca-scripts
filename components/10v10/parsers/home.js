@@ -7,7 +7,8 @@ var cheerio = require('cheerio'),
 
 module.exports = function (options, response, callback) {
 	var $ = cheerio.load(response.body),
-		identifier = util.format('div#team_content_%s input[name="battle_id"]', options.toon.configs[options.role]['squad']);
+		squad = parseInt(options.toon.configs[options.role]['squad']) - 1,
+		identifier = util.format('div#team_content_%d input[name="battle_id"]', squad);
 		data = {
 			id: $(identifier).attr('value')
 		};

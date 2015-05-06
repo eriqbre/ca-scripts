@@ -53,7 +53,9 @@ module.exports = function (options, callback) {
 		},
 		// enter the battle page
 		function (options, callback) {
-			async.map(options.toons, function (toon, callback) {
+			async.map(_.filter(options.toons, function (toon) {
+				return toon.battle && toon.battle.id && toon.jar;
+			}), function (toon, callback) {
 				battle.enter({jar: toon.jar, id: toon.battle.id, battle: toon.battle}, function (error, data) {
 					callback(null, _.extend(toon.battle, data));
 				});

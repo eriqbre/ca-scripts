@@ -13,7 +13,10 @@ module.exports = function (options, response, callback) {
         enterBattleInput = $('input[name="action"][value="enter_battle"]'),
         containers = $('.guild_battle_container'),
         side = options.form.view_allies ? 'attacker' : 'defender',
-        towerNumber = options.form.sel_pos || '1';
+	    towerNumber = options.form.sel_pos || '1',
+	    collectAvailable = $('input[value="collect_battle"][name="action"]').length > 0;
+
+	data.isCollectAvailable = collectAvailable;
 
 	data.attacker.towers = {
 		t1: {}
