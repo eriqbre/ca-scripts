@@ -8,6 +8,7 @@ var request = require('request'),
     async = require('async');
 
 module.exports = function (options, callback) {
+    //require('events').EventEmitter.setMaxListeners(0);
     //require('request-debug')(request);
     var _this = this,
         headers = {
@@ -50,7 +51,7 @@ module.exports = function (options, callback) {
                 }
             });
         })
-            .on('response', function (response) {
+            .once('response', function (response) {
                 // add global data to the response
                 _.extend(response, {
                     data: {
@@ -61,7 +62,7 @@ module.exports = function (options, callback) {
                     }
                 });
             })
-            .on('error', function (error) {
+            .once('error', function (error) {
                 if (error.code !== 'ETIMEDOUT' && error.code !== 'ESOCKETTIMEDOUT') {
 			        console.log(error);
 		        }

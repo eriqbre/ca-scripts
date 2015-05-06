@@ -38,29 +38,33 @@ module.exports = function (callback) {
                 async.parallel([
                     // run toons with demi-blessings
                     function (callback) {
-                        async.map(_.filter(options.toons, function (toon) {
-                            // return the toons for this requests
-                            return toon.roles.indexOf('demi-blessing') > -1 && toon.data.demiBlessing.available;
-                        }), function (toon, callback) {
-                            // run the requests
-                            if (toon) {
-                                demiBlessing({
-                                    config: toon.configs,
-                                    jar: toon.jar,
-                                    default: toon.data.demiBlessing.default || '2'
-                                }, function (error, data) {
-                                    task.data.push(_.extend(data, {
-                                        type: 'demi-blessing', toon: toon.name
-                                    }));
-                                    callback(null, data);
-                                });
-                            } else {
-                                callback(null, {});
-                            }
-                        }, function (error, data) {
-                            // return the results
-                            callback(error, data);
-                        });
+                        try {
+                            async.map(_.filter(options.toons, function (toon) {
+                                // return the toons for this requests
+                                return toon.roles.indexOf('demi-blessing') > -1 && toon.data.demiBlessing.available;
+                            }), function (toon, callback) {
+                                // run the requests
+                                if (toon) {
+                                    demiBlessing({
+                                        config: toon.configs,
+                                        jar: toon.jar,
+                                        default: toon.data.demiBlessing.default || '2'
+                                    }, function (error, data) {
+                                        task.data.push(_.extend(data, {
+                                            type: 'demi-blessing', toon: toon.name
+                                        }));
+                                        callback(null, data);
+                                    });
+                                } else {
+                                    callback(null, {});
+                                }
+                            }, function (error, data) {
+                                // return the results
+                                callback(error, data);
+                            });
+                        } catch (exception) {
+                            callback(null, {});
+                        }
                     },
                     // run toons with item archives
                     function (callback) {
