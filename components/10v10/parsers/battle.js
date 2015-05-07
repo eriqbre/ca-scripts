@@ -19,7 +19,11 @@ module.exports = function (options, response, callback) {
 
     data.success = actionSuccess;
 	data.isCollectAvailable = collectAvailable;
-
+	try {
+		data.tokens = parseInt($('#guild_token_current_value').text());
+	} catch (ex) {
+		data.tokens = 0;
+	}
 	data.attacker.towers = {
 		t1: {}
 	};

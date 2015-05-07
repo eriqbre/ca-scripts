@@ -22,7 +22,7 @@ module.exports = {
 		//time: "0 * * * * *"
 	},
     tvtCollect: {
-	    time: "31 9,3,9 * * *"
+	    time: "30 30 9,3,9 * * *"
     },
     loadouts: {
         times: [

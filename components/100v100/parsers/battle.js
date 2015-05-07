@@ -24,6 +24,11 @@ module.exports = function (options, response, callback) {
 
 		data.isCollectAvailable = collectAvailable;
 		data.isOver = battleIsOver;
+		try {
+			data.tokens = parseInt($('#guild_token_current_value').text());
+		} catch (ex) {
+			data.tokens = 0;
+		}
 
 		if (attackerGuildId) {
 			data.attacker.id = attackerGuildId.val();

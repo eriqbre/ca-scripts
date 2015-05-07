@@ -24,8 +24,8 @@ module.exports = function (options, callback) {
 		                action: options.form.action
 	                });
                     callback(error, data);
-                } else {
-                    // if we tripped, keep on trying
+                } else if (data.tokens > 0) {
+	                // if we tripped, keep on trying as long as they still have tokens
                     trigger(options, callback);
                 }
             });

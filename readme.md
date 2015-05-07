@@ -10,3 +10,4 @@ todo:
 - save jar and reuse (if possible)
 - lom-active-defense
 - farm fbb
+- auto-opt-in for 10v10
