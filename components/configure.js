@@ -55,7 +55,8 @@ module.exports = function (options) {
                 }
             };
             break;
-        case '100v100-actions':
+
+	    case '100v100-actions':
             var config = {
                 parser: require('./100v100/parsers/battle'),
                 timeout: 10000,
@@ -97,7 +98,8 @@ module.exports = function (options) {
                 }
             };
             break;
-        case 'fbb-actions':
+
+	    case 'fbb-actions':
             var config = {
                 parser: require('./fbb/parsers/battle'),
                 timeout: 10000,

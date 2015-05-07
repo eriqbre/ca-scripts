@@ -82,7 +82,7 @@ module.exports = function (options, callback) {
         // get tower data for both sides
         function (options, callback) {
 	        async.map(_.filter(options.toons, function (toon) {
-		        return !toon.battle.isOver;
+		        return !toon.battle.isOver && toon.jar && toon.battle;
 	        }), function (toon, callback) {
 	            async.map(toon.battle.towers, function (tower, callback) {
                     battle.tower({jar: toon.jar, tower: tower, battle: toon.battle}, function (error, data) {

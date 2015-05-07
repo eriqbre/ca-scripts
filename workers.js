@@ -69,7 +69,7 @@ app.listen(cronfigs.port, function () {
 	new cronJob({
 		cronTime: cronfigs.tvtCollect.time,
 		onTick: function () {
-			battleActions({role: 'auto-collect-10v10'}, function (error, data) {
+			battleCollection({role: 'auto-collect-10v10'}, function (error, data) {
 				console.log('completed battle-collection for 10v10');
 			});
 		},
