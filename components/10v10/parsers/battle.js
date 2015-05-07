@@ -14,8 +14,10 @@ module.exports = function (options, response, callback) {
         containers = $('.guild_battle_container'),
         side = options.form.view_allies ? 'attacker' : 'defender',
 	    towerNumber = options.form.sel_pos || '1',
+        actionSuccess = $('div:not(:has(div)):contains("Battle Results")').length > 0,
 	    collectAvailable = $('input[value="collect_battle"][name="action"]').length > 0;
 
+    data.success = actionSuccess;
 	data.isCollectAvailable = collectAvailable;
 
 	data.attacker.towers = {
