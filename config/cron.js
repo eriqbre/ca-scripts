@@ -18,11 +18,11 @@ module.exports = {
         ]
     },
 	tvtActions: {
-		time: "30 0 9,3,9 * * *"
+        time: "30 0 9,15,21 * * *"
 		//time: "0 * * * * *"
 	},
     tvtCollect: {
-	    time: "30 30 9,3,9 * * *"
+        time: "31 9,15,21 * * *"
 	    //time: "0 * * * * *"
     },
     loadouts: {
