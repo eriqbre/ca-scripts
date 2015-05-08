@@ -1,6 +1,6 @@
 /**
  * Created by ebreland on 4/27/2015.
- * execute auto-actions for facebook battle
+ * execute auto-actions for all battles
  */
 
 var async = require('async'),
@@ -48,12 +48,17 @@ module.exports = function (options, callback) {
 		            callback(null, options);
                 });
             }, function (error, data) {
+	            options.toons = _.filter(options.toons, function (toon) {
+		            return toon.battle.id;
+	            });
                 callback(null, options);
             });
         },
         // enter the battle page
         function (options, callback) {
-            async.mapSeries(options.toons, function (toon, callback) {
+	        async.mapSeries(_.filter(options.toons, function (toon) {
+		        return toon.battle.id;
+	        }), function (toon, callback) {
                 battle.enter({jar: toon.jar, id: toon.battle.id, battle: toon.battle}, function (error, data) {
                     callback(null, _.extend(toon.battle, data));
                 });
@@ -100,10 +105,10 @@ module.exports = function (options, callback) {
                 callback(error, options);
             });
         },
-        // execute actions
+	    // execute pre-defined actions
         function (options, callback) {
 	        async.map(_.filter(options.toons, function (toon) {
-		        return !toon.battle.isOver;
+		        return !toon.battle.isOver && toon.configs[options.role] && toon.configs[options.role]['actions'];
 	        }), function (toon, callback) {
                 // for each toon, execute the series of actions defined in the config
                 async.mapSeries(toon.configs[options.role]['actions'], function (action, callback) {

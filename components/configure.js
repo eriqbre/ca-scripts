@@ -9,6 +9,15 @@ var request = require('../requests/base'),
 
 module.exports = function (options) {
     switch (options.role) {
+	    //region lom-sieges
+	    case 'lom-sieges':
+		    var config = {};
+
+		    return {};
+		    break;
+	    //endregion
+
+	    //region 10v10-actions
         case '10v10-actions':
             var config = {
                 parser: require('./10v10/parsers/battle'),
@@ -55,7 +64,9 @@ module.exports = function (options) {
                 }
             };
             break;
+	    //endregion
 
+	    //region 100v100-actions
 	    case '100v100-actions':
             var config = {
                 parser: require('./100v100/parsers/battle'),
@@ -98,7 +109,9 @@ module.exports = function (options) {
                 }
             };
             break;
+	    //endregion
 
+	    //region fbb-actions
 	    case 'fbb-actions':
             var config = {
                 parser: require('./fbb/parsers/battle'),
@@ -141,7 +154,9 @@ module.exports = function (options) {
                 }
             };
             break;
+	    //endregion
 
+	    //region auto-collect-100v100
 	    case 'auto-collect-100v100':
 		    var config = {
 			    parser: require('./100v100/parsers/battle'),
@@ -178,7 +193,9 @@ module.exports = function (options) {
 			    }
 		    };
 		    break;
+	    //endregion
 
+	    //region auto-collect-10v10
 	    case 'auto-collect-10v10':
 		    var config = {
 			    parser: require('./10v10/parsers/battle'),
@@ -211,5 +228,22 @@ module.exports = function (options) {
 			    }
 		    };
 		    break;
+	    //endregion
+
+	    //region auto-collect-fbb
+	    case 'auto-collect-fbb':
+		    var config = {};
+
+		    return {};
+		    break;
+	    //endregion
+
+	    //region fbb-farming
+	    case 'fbb-farming':
+		    var config = {};
+
+		    return {};
+		    break;
+	    //endregion
     }
 };
