@@ -7,6 +7,6 @@ module.exports = function (options) {
 		healthPerActionTarget: (options.healthPerActionTarget || 4000),
 		ceiling: (options.ceiling || 950),
 		floor: (options.floor || 50),
-		healthPercentage: (options.healthPercentage || 95)
+		healthPercentage: (options.healthPercentage || 90)
 	}
 };

@@ -18,7 +18,7 @@ module.exports = {
         ]
     },
 	tvtActions: {
-        time: "15 0 9,15,21 * * *"
+        time: "15 0 3,9,15,21 * * *"
 		//time: "0 * * * * *"
 	},
     tvtCollect: {
@@ -39,10 +39,10 @@ module.exports = {
         time: "5,25,45 * * * *",
         //time: "0 * * * * *",
         roles: [
-            "demi-blessing",
+            "collect-hero-crystal",
             "collect-resources",
-            "set-item-archives",
-            "collect-hero-crystal"
+            "demi-blessing",
+            "set-item-archives"
         ]
     }
 };
