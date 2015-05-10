@@ -8,6 +8,7 @@
  * the tower.
  *
  * todo: i'll need to account for time remaining also
+ * the thresholds should be sliding when there are multiple lands in order to conserve tokens
  */
 
 var lomActions = require('../config/lom-actions'),
