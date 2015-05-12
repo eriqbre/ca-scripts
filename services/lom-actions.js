@@ -6,6 +6,7 @@ var async = require('async'),
     login = require('../requests/sequences/login-sequence'),
     changeLoadout = require('../requests/loadouts'),
     lomAttack = require('../requests/lom-attack'),
+    LomBattle = require('../models/lom-battle'),
     landOfMistTower = require('../requests/lom-tower'),
     lomTowerSort = require('./sort-lom-defense-towers'),
     Task = require('../models/task'),
@@ -70,7 +71,9 @@ module.exports = function (options, callback) {
                         }
                         //options = lomTowerSort(options);
                         --tower.actionsRemaining;
-                        attack(options, callback);
+                        saveBattleData(tower, function(error, data){
+                            attack(options, callback);
+                        });
                     }
                     // once remaining actions hits a predetermined number, break out and end
                     else {
@@ -145,6 +148,14 @@ module.exports = function (options, callback) {
             }
 
             return result;
+        },
+        saveBattleData = function(data, callback){
+            var lomBattle = new LomBattle();
+
+
+            lomBattle.save(function(error){
+                callback(null, data);
+            });
         };
 
     async.waterfall([
