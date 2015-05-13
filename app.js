@@ -4,6 +4,7 @@
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
+    cleanup = require('./services/cleanup'),
     cookieParser = require('cookie-parser'),
     errorHandler = require('errorhandler'),
     session = require('express-session'),
