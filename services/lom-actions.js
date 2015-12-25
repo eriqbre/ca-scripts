@@ -213,9 +213,10 @@ module.exports = function (options, callback) {
         function (options, callback) {
             attack(options, function (error, data) {
                 // save task in mongo
+                /*
                 task.save(function(error){
                     callback(null, options);
-                });
+                });*/
             });
         }
     ], function (error, data) {

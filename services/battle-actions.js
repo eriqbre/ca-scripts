@@ -176,9 +176,9 @@ module.exports = function (options, callback) {
         // waterfall complete, everything is done
         if (task.data.length > 0) {
             // only save the task if something was executed
-            task.save(function (error) {
+            //task.save(function (error) {
                 callback(null, data);
-            });
+            //});
         } else {
             callback(null, data);
         }
