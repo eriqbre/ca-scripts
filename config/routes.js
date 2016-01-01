@@ -4,7 +4,7 @@
  * sr =4 00000007931960_1332286643
  */
 
-var domain = 'https://web3.castleagegame.com',
+var domain = 'https://web4.castleagegame.com',
     base = domain + '/castle_ws/';
 
 module.exports = {
