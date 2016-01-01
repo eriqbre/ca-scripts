@@ -12,8 +12,8 @@ module.exports = function (app) {
             // get the credentials for email requested
             Toon.findOne({email: request.params.email}, function (error, toon) {
                 // trigger login request
-                login(toon, function (error, response) {
-                    response.json(response.data)
+                login(toon, function (error, data) {
+                    response.json(data)
                 });
             });
         });
