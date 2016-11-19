@@ -4,6 +4,8 @@ var app = require('./app'),
 	port = process.env.PORT || 3010,
 	environment = process.env.NODE_ENV || 'development';
 
+app.listen(port);
+/*
 if (process.env.NODE_ENV === 'production') {
 	// for production, no debugging possible
 	cluster(function (worker) {
@@ -21,4 +23,4 @@ if (process.env.NODE_ENV === 'production') {
 	console.log('server running on port ' + port);
 	console.log('single process environment for ' + environment);
 }
-
+*/
