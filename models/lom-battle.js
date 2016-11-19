@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     LomBattleToon = require('./lom-battle-toon'),
     LomBattleSchema = new mongoose.Schema({
         id: String,
-        toons: [LomBattleToon],
+        toons: [{type: mongoose.Schema.Types.ObjectId, ref: 'LomBattleToon'}],
         totalHealth: Number,
         healthRemaining: Number,
         actionsRemaining: Number,
