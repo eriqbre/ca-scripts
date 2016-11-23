@@ -36,7 +36,7 @@ module.exports = function (app) {
             });
         });
 
-    app.route('/api/toon')
+    app.route('/api/toon/:email')
        .get(function(request, response) {
 	       toonService.findByEmail({ email: request.params.email }, function(error, data){
 		       response.json(data);
