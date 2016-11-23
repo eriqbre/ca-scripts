@@ -3,9 +3,10 @@
  */
 
 var Toon = require('../../models/toon'),
-	Role = require('../../models/role'),
+	//Role = require('../../models/role'),
     cipher = require('../../config/cipher'),
-    toonService = require('../../services/toons');
+    toonService = require('../../services/toons'),
+   _ = require('lodash');
 
 module.exports = function (app) {
     // api/toons
@@ -35,6 +36,36 @@ module.exports = function (app) {
             });
         });
 
+    app.route('/api/toon')
+       .get(function(request, response) {
+	       toonService.findByEmail({ email: request.params.email }, function(error, data){
+		       response.json(data);
+	       });
+       })
+	    .patch(function (request, response) {
+		    toonService.findByEmail({ email: request.body.email }, function(error, toon){
+			    if (request.body.configs) {
+				    _.each(request.body.configs, function(value, key){
+					    toon.configs[key] = value;
+				    });
+			    }
+
+			    if (request.body.password) {
+				    toon.password = request.body.password;
+			    }
+
+			    if (request.body.roles) {
+				    toon.roles = request.body.roles;
+			    }
+
+			    toon.save(function (error, data) {
+				    if (error) return response.send({error: error.message});
+
+				    response.json(data);
+			    });
+		    });
+	    });
+
     app.route('/api/toon/:id')
         .all(function (request, response, next) {
             console.log('single toon interceptor');
@@ -55,31 +86,7 @@ module.exports = function (app) {
                 })
             });
         })
-	    .put(function (request, response) {
-            Toon.findOne({_id: request.params.id}, function (error, toon) {
-
-                if (request.body.email) {
-                    toon.email = request.body.email;
-                }
-
-                if (request.body.password) {
-                    toon.password = request.body.password;
-                }
-
-                if (request.body.caId) {
-                    toon.caId = request.body.caId;
-                }
-
-                if (request.body.name) {
-                    toon.name = request.body.name;
-                }
-
-                toon.save(function (error) {
-                    response.json(toon);
-                });
-
-		    });
-	    });
+       .post(function (request, response) {});
 
 	app.route('/api/bots/:role')
 		.get(function(request, response){
